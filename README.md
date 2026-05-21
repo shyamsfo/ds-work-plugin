@@ -81,6 +81,8 @@ This works through **how-to extension files** that live inside each project at `
 
 **Concrete example.** A project running a Kubernetes cluster and a Postgres database in the cloud burns money while idle. You can extend `/ds-work-halt` to shut that infra down at the end of every session by adding:
 
+> **Pedantic but worth saying:** you don't need to hand-write these files. Just ask Claude. Something like *"customize `/ds-work-halt` for this project — at the end of each session we should scale our GKE node pool to 0 and stop the Cloud SQL instance"* is enough. Claude will create the right file under `product/how-to/` and the next halt will pick it up. Same for any other command you want to customize.
+
 ```markdown
 # product/how-to/ds-work-halt.md
 
