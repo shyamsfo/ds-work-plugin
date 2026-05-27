@@ -15,6 +15,7 @@ product/
 ├── roadmap.md                    # architecture + milestone plan (placeholder)
 ├── milestones.md                 # progress tracker (placeholder)
 ├── now.md                        # session pointer (placeholder)
+├── backlog.md                    # low-commitment mind-dump (placeholder)
 ├── parking-lot.md                # unscheduled work items (placeholder)
 ├── project-management-principles.md   # canonical PM reference (copied from scaffold)
 ├── design/                       # PRDs and PLANs per milestone (empty, ready to use)
@@ -267,6 +268,20 @@ One item per line. Tags are freeform but the conventions are:
 <!-- newest first; auto-trimmed to 10 -->
 ```
 
+### 5b. Create product/backlog.md
+
+```markdown
+# Backlog
+
+Mind-dump. Captured so we don't forget. No commitment, no priority. Sweep periodically: promote to `parking-lot.md`, fold into a PRD's Out-of-scope, or delete.
+
+One item per line. Date prefix optional but useful: `- YYYY-MM-DD — <thought>`. Append at the bottom.
+
+## Items
+
+<!-- append at bottom; format: - YYYY-MM-DD — <thought> -->
+```
+
 ### 6. Create product/how-to/ds-work-continue.md
 
 ```markdown
@@ -407,6 +422,7 @@ product/vision.md            ← why + who (problem, customer, north star)
 product/roadmap.md           ← what + how (architecture, milestones, key decisions)
 product/milestones.md        ← progress tracker (story checkboxes, milestone status)
 product/now.md               ← session pointer (what I'm doing right now)
+product/backlog.md           ← low-commitment mind-dump (no priority, no tags)
 product/parking-lot.md       ← unscheduled work items (bugs, chores, ideas captured for later)
 product/design/M{N}-PRD.md   ← milestone spec (what to build, scope, success criteria)
 product/design/M{N}-PLAN.md  ← milestone execution checklist (sub-task checkboxes)
@@ -466,6 +482,16 @@ Unscheduled work items — bugs, chores, ideas, research notes — captured so t
 Each item is one line: `- [ ] YYYY-MM-DD — title  [tags]`. Tags are freeform; conventions are `[bug] [chore] [idea] [research]`, sizes `[S] [M] [L]`, and milestone links `→M{N}`.
 
 Managed by `/ds-work-parking-lot` — show the list with suggestions, add items (`/ds-work-parking-lot add <text>`), promote items into the active PLAN, or drop with a reason. `/ds-work-halt` asks each session whether anything is worth parking.
+
+### `product/backlog.md` — The Backlog
+
+Mind-dump that sits one rung *below* the parking lot in commitment level. The parking lot says "this is worth doing eventually"; the backlog says "I don't want to forget this thought." No priority, no tags, no checkboxes — just dated bullets, append-only at the bottom.
+
+Each item is one line: `- YYYY-MM-DD — <thought>` (date optional but useful).
+
+Managed by `/ds-work-backlog` — show the list (no ranking, no suggestions), add items (`/ds-work-backlog add <text>`), or `sweep` periodically to walk each item and decide: **promote** to parking-lot, **fold** into a PRD's Out-of-scope, or **delete** (silently — the backlog is intentionally lossy).
+
+The capture ladder: `backlog.md` → `parking-lot.md` → `design/M{N}-PLAN.md`. Items graduate upward; they don't have to.
 
 ### `product/now.md` — The Session Pointer
 
@@ -554,6 +580,11 @@ The full shutdown sequence: updates milestones + now.md, writes session report, 
 
 **Always end sessions with `/ds-work-halt`**, not manual commits.
 
+#### `/ds-work-backlog [add <text> | sweep]`
+**When**: A half-formed thought arrives that you might want to revisit but don't want to commit to — or when the backlog has grown enough to need a sweep.
+
+Reads/writes `backlog.md`. Default mode shows the items (no ranking, no suggestions — backlog is intentionally flat). `add <text>` appends to the bottom. `sweep` walks items one at a time and for each asks: **promote** to parking-lot, **fold** into a PRD's Out-of-scope, **delete** silently, or skip. The backlog sits one rung below the parking lot in commitment level.
+
 #### `/ds-work-parking-lot [add <text> | pick | <tag>]`
 **When**: An idea, bug, or chore surfaces that does not belong to the active milestone — or when you want to pull something off the parking lot.
 
@@ -627,6 +658,7 @@ Nothing is duplicated. Each document answers exactly one question.
 | Which milestone am I in? | `milestones.md` |
 | Which stories are done? | `milestones.md` |
 | What am I doing right now? | `now.md` |
+| What half-formed thought do I want to remember? | `backlog.md` |
 | What's parked for later (not yet scheduled)? | `parking-lot.md` |
 | What exactly does milestone N require? | `product/design/M{N}-PRD.md` |
 | What's the execution checklist for milestone N? | `product/design/M{N}-PLAN.md` |

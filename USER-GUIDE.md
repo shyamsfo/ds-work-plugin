@@ -17,6 +17,7 @@ The plugin treats a software project as a set of stable questions, each answered
 | Which milestone am I in? Which stories are done? | `milestones.md` |
 | What am I working on right now? | `now.md` |
 | What's parked for later (not yet scheduled)? | `parking-lot.md` |
+| What half-formed thought do I want to remember? | `backlog.md` |
 | What exactly does milestone N require? | `design/M{N}-PRD.md` |
 | What's the execution checklist for milestone N? | `design/M{N}-PLAN.md` |
 | Which concerns were raised against a planning artifact? | `reviews/<target>-challenge-YYYY-MM-DD.md` |
@@ -63,6 +64,9 @@ Run every session, in order.
 | `/ds-work-update [dir]` | Mid-session checkpoint | Appends a timestamped snapshot to today's session report. |
 | `/ds-work-halt [dir]` | End of session | Updates `milestones.md` + `now.md`, writes the session report, commits, pushes, runs project-specific teardown. |
 | `/ds-work-parking-lot [add <text> \| pick \| <tag>]` | Anytime | Manage unscheduled items. `add <text>` appends. `pick` shows suggestions. A tag (`bug`, `chore`, `idea`, `research`) filters. |
+| `/ds-work-backlog [add <text> \| sweep]` | Anytime — a half-formed thought arrives that you might want to revisit but don't want to commit to | Default: shows items (no ranking, no suggestions — backlog is intentionally flat). `add <text>` appends to the bottom. `sweep` walks items one at a time and asks: promote to parking-lot, fold into a PRD's Out-of-scope, delete silently, or skip. |
+
+**Capture ladder.** Three surfaces, three commitment levels: `backlog.md` (mind-dump, no priority) → `parking-lot.md` (worth doing eventually, has tags) → `design/M{N}-PLAN.md` (scheduled). Items graduate upward via `/ds-work-backlog sweep` and `/ds-work-parking-lot promote`. They don't have to.
 
 ### Review
 | Command | Purpose |
@@ -102,6 +106,7 @@ product/
 ├── milestones.md                ← progress tracker
 ├── now.md                       ← session pointer
 ├── parking-lot.md               ← unscheduled work
+├── backlog.md                   ← low-commitment mind-dump (no priority, no tags)
 ├── project-management-principles.md   ← how this system works
 ├── one-pager.md
 ├── elevator-pitch.md
@@ -159,6 +164,7 @@ After committing and pushing, also:
 | `roadmap.md` | Decision Log + resolved Open Questions → Key Decisions | Architecture pivots need "why we ended up here" |
 | `milestones.md` | None — git history + session reports | Changes too often |
 | `parking-lot.md` | `Open` → `Done / Dropped (last 10)` tail | A working surface, not an archive |
+| `backlog.md` | None — items disappear (deleted), graduate (promoted), or fold (into PRD). No archive. | Backlog is intentionally lossy; if you need a record, promote to parking-lot first |
 | PRDs | Decision Log at bottom | Milestone-level decisions future-you will question |
 | PLANs | Checkboxes are the change record | A log would duplicate them |
 | Challenge reports | Append-only files, timestamped | Snapshots in time |
