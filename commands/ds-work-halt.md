@@ -7,11 +7,17 @@ Wrap up the current work session cleanly.
 
 The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
+## 0. Detect the project mode
+
+Read `<dir>/ds-work-mode.txt` if it exists. Its single line is either `lite` or `full`. Missing → default to `full` (backward compatible).
+
+Branch the steps below by mode. The short version: lite mode skips PRD/PLAN ticking and `now.md` updates entirely; everything else (parking-lot sweep, milestones.md ticking, session report, commit, push, project-specific shutdown) runs the same way.
+
 Work through these steps in order:
 
 ## 1. Gather current state
 
-Read all of:
+**Full mode** — read all of:
 - `<dir>/now.md` — what was just done, what's next
 - `<dir>/milestones.md` — task checklist
 - `<dir>/design/M{N}-PRD.md` and `<dir>/design/M{N}-PLAN.md` for the active milestone (if they exist)
@@ -19,6 +25,13 @@ Read all of:
 - `git status` — uncommitted changes
 
 Note the active milestone's **sub-state** (`defined` / `drafting` / `planned` / `executing` / `complete`) inferred from PRD/PLAN file presence and PLAN checkbox progress. This will be reported in the session summary.
+
+**Lite mode** — read only:
+- `<dir>/milestones.md` — task checklist (this *is* the plan in lite mode)
+- `git log --oneline -10` — recent commits
+- `git status` — uncommitted changes
+
+There is no sub-state in lite mode. Just note how many tasks in the active milestone are now ticked vs total.
 
 ## 2. Assess checkpoint readiness
 
@@ -43,12 +56,17 @@ If the user skips, move on silently.
 
 Go through the active milestone task list in `milestones.md`. For each task completed this session, change `[ ]` to `[x]`. For any task in progress but not done, use `[~]`. Be conservative — only check off tasks that are verifiably complete.
 
-If the active milestone has a PLAN file (`<dir>/design/M{N}-PLAN.md`), also walk the unchecked items there. For each one finished this session, tick it. Ask the user to confirm before ticking — do not silently mark items based on guesswork. The PLAN's checkboxes are the canonical record of what got done within the milestone.
+**Full mode**: if the active milestone has a PLAN file (`<dir>/design/M{N}-PLAN.md`), also walk the unchecked items there. For each one finished this session, tick it. Ask the user to confirm before ticking — do not silently mark items based on guesswork. The PLAN's checkboxes are the canonical record of what got done within the milestone. Do not modify the PRD.
 
-Do not modify the PRD.
+**Lite mode**: there is no PLAN file — `milestones.md` is the only checklist to update. Skip the PLAN/PRD steps.
+
+If all tasks in the active milestone are now ticked, ask the user whether to flip the milestone status to `✅ done` and mark the next pending milestone `🔄 in progress`.
 
 ## 4. Update now.md
 
+**Lite mode**: there is no `now.md`. Skip this step entirely.
+
+**Full mode**:
 - Rewrite "What Was Just Done" with 3–5 bullets from this session
 - Update "Next action" to the next unchecked PLAN item if a PLAN exists, otherwise the first unchecked task in milestones.md
 - If a PLAN exists, surface the milestone's sub-state and progress (e.g. "M2 `executing`, 4 of 7 PLAN items done")
@@ -59,12 +77,13 @@ Do not modify the PRD.
 
 Create or append to `<dir>/reports/YYYY-MM-DD.md` (today's date).
 
-If the file already exists, append a new section:
+If the file already exists, append a new section. **Full mode** uses the sub-state line; **lite mode** uses the simpler progress line instead.
 ```
 ## Session End — HH:MM UTC
 
 **Duration**: <start to now if known, otherwise omit>
-**Active milestone**: M{N} — sub-state `<defined | drafting | planned | executing | complete>` (<X> of <Y> PLAN items done, when applicable)
+**Active milestone**: M{N} — sub-state `<defined | drafting | planned | executing | complete>` (<X> of <Y> PLAN items done, when applicable)   <!-- full mode -->
+**Active milestone**: M{N} (<X> of <Y> tasks done)                                                                                              <!-- lite mode — use this line instead -->
 **Git commits this session**: <list new commits>
 
 ### Completed
@@ -97,9 +116,9 @@ Then append the Session End section.
 ## 6. Commit and push
 
 Stage all modified files:
-- `<dir>/now.md`
+- `<dir>/now.md` *(full mode only — file doesn't exist in lite mode)*
 - `<dir>/milestones.md`
-- `<dir>/design/M{N}-PLAN.md` (if PLAN checkboxes were ticked this session)
+- `<dir>/design/M{N}-PLAN.md` *(full mode only, if PLAN checkboxes were ticked this session)*
 - `<dir>/parking-lot.md` (if parking-lot was modified this session)
 - `<dir>/reports/YYYY-MM-DD.md`
 - Any other modified tracked files surfaced by git status
@@ -124,10 +143,14 @@ If the file does not exist, skip this step silently.
 ## 8. Report back
 
 Confirm:
-- ✅ Docs updated (milestones.md, now.md, and PLAN if applicable)
+- ✅ Docs updated (milestones.md, plus `now.md` and PLAN in full mode if applicable)
 - ✅ Session report written to `<dir>/reports/YYYY-MM-DD.md`
 - ✅ Committed and pushed (show `git log --oneline -3`)
-- Active milestone sub-state at session end (e.g. "M2 `executing`, 4 of 7 PLAN items done")
+- Active milestone status at session end
+  - **Full mode**: sub-state (e.g. "M2 `executing`, 4 of 7 PLAN items done")
+  - **Lite mode**: tasks ticked (e.g. "M2: 4 of 7 tasks done")
 - Any project-specific shutdown steps completed (from how-to file, if present)
 
-If the milestone just transitioned to `complete` (all PLAN boxes ticked), suggest: *"Run `/ds-work-plan` next to confirm closure and flip the green tick in milestones.md."*
+**Full mode**: if the milestone just transitioned to `complete` (all PLAN boxes ticked), suggest: *"Run `/ds-work-plan` next to confirm closure and flip the green tick in milestones.md."*
+
+**Lite mode**: if the active milestone's tasks are all ticked, suggest: *"All M{N} tasks are done — flip its status to `✅ done` and mark the next milestone `🔄 in progress` in milestones.md."* (Offer to do it now.)

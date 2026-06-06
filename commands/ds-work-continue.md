@@ -5,14 +5,21 @@ description: Resume work on a project by reading now.md, milestones.md, and road
 
 You are helping the user resume work on a software project after a break or context reset. Work through the following steps in order.
 
-## 1. Locate the product docs
+## 0. Detect the project mode
 
 The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
+Read `<dir>/ds-work-mode.txt` if it exists. Its single line is either `lite` or `full`. If the file is missing, default to `full` (backward compatible with existing projects).
+
+- **lite mode** → follow the **lite path** described inline below for each step. Skip anything that references `now.md`, `roadmap.md`, PRD/PLAN files, or sub-state.
+- **full mode** → follow the steps as written.
+
+## 1. Locate the product docs
+
 Look for these files in the target directory:
-- `now.md` — current focus, next action, what was recently completed
-- `milestones.md` — task checklist across all milestones
-- `roadmap.md` — architecture and design decisions (skim only, don't summarise at length)
+- `now.md` — current focus, next action, what was recently completed *(full mode only — skip in lite)*
+- `milestones.md` — task checklist across all milestones *(both modes)*
+- `roadmap.md` — architecture and design decisions, skim only *(full mode only — skip in lite)*
 
 If none of these files exist in the given directory, search the repo for files with these names and ask the user to confirm which project they want to resume.
 
@@ -32,7 +39,9 @@ In `milestones.md`:
 
 ## 4. Load milestone planning state
 
-From the active milestone in `milestones.md`, identify its ID (e.g. `M2`). Then look for its planning artifacts in `<dir>/design/`:
+**Lite mode**: there is no PRD/PLAN. The "next item" is the unchecked task identified in Step 3. Skip the rest of this step and jump to Step 5.
+
+**Full mode**: from the active milestone in `milestones.md`, identify its ID (e.g. `M2`). Then look for its planning artifacts in `<dir>/design/`:
 
 - `M{N}-PRD.md` — milestone spec
 - `M{N}-PLAN.md` — sub-task checklist
@@ -58,7 +67,7 @@ Then load the appropriate working context:
 
 ## 5. Present the resume brief
 
-Output a short, scannable summary — aim for something the user can read in 30 seconds:
+**Full mode** — output a short, scannable summary (aim for something the user can read in 30 seconds):
 
 ```
 ## Resume Brief
@@ -79,16 +88,38 @@ Output a short, scannable summary — aim for something the user can read in 30 
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
 ```
 
+**Lite mode** — shorter brief, no sub-state, no scope context, no now.md:
+
+```
+## Resume Brief (lite)
+
+**Milestone**: <milestone name and status> (<X/Y tasks done>)
+**Next task**: <first [~] or [ ] task verbatim>
+
+**Recently completed**: <2–3 bullets — derive from the most recent file in <dir>/reports/ if available, else from the most recent commits>
+
+**Infrastructure state**: <up / hibernated / unknown — from how-to/ds-work-continue.md context if available>
+**Uncommitted changes**: <none / list files if any>
+**Recent commits**: <last 3–4 one-liners from git log>
+
+<!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
+**Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
+```
+
 ## 6. Propose the next action
 
-State clearly what to do next based on the sub-state:
+**Full mode** — state clearly what to do next based on the sub-state:
 
 - `defined` / `drafting` → run `/ds-work-plan` to write/finish the PRD and PLAN.
 - `planned` / `executing` → quote the next unchecked PLAN item verbatim (with its file path and verification step) and ask the user to confirm before diving in.
 - `complete` → run `/ds-work-plan` to close out and update `milestones.md`.
 
+**Lite mode** — quote the next unchecked task verbatim and ask the user to confirm before starting. If all tasks in the active milestone are ticked, say so and ask whether to flip the milestone to `✅ done` and start the next one.
+
 Interactive, not auto-resume: ask the user to confirm before starting work, or whether something has changed since the docs were last updated.
 
-## 7. Offer to update now.md
+## 7. Offer to update now.md / milestones.md
 
-If the user confirms the current state is accurate, offer to update `now.md` with today's date and any corrections. If the state has changed (e.g. a task was completed offline), update `milestones.md` checkboxes and `now.md` before proceeding.
+**Full mode** — if the user confirms the current state is accurate, offer to update `now.md` with today's date and any corrections. If the state has changed (e.g. a task was completed offline), update `milestones.md` checkboxes and `now.md` before proceeding.
+
+**Lite mode** — there is no `now.md`. If the state has drifted (a task was completed offline, the active milestone shifted), offer to update `milestones.md` checkboxes before proceeding.

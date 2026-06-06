@@ -10,6 +10,21 @@ The plugin treats a software project as a set of stable questions, each answered
 
 > **One question, one document.** The moment the same content lives in two places, they drift.
 
+---
+
+## Two modes: full or lite
+
+Every scaffolded project picks one of two modes, recorded in `product/ds-work-mode.txt`:
+
+| Mode | Stack | When to use |
+|------|-------|-------------|
+| **full** | `vision.md` + `roadmap.md` + `now.md` + `milestones.md` + `design/` (PRDs + PLANs per milestone) + `reviews/` + `market-research/` + the usual extras | Real product story, multiple milestones with design decisions, external stakeholders, or anything you'll need to communicate outward. |
+| **lite** | `milestones.md` (all milestones in one file with a flat task checklist — *this file is the plan*) + `backlog.md` + `parking-lot.md` + `reports/` + lighter `how-to/` | Clear execution path, no real product framing needed. No vision/roadmap/PRDs to maintain. |
+
+Every command branches on the mode marker. Commands that produce full-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-challenge`) detect lite mode and offer to graduate before doing anything.
+
+Promote a lite project to full at any time with `/ds-work-graduate`. Graduation is one-way and additive — existing files are preserved, full-mode artifacts are added alongside.
+
 | Question | Answer lives in |
 |----------|----------------|
 | Why are we building this? Who is it for? | `vision.md` |
@@ -33,16 +48,17 @@ Run when starting a project or filling in empty scaffolded docs.
 
 | Command | Purpose |
 |---------|---------|
-| `/ds-work-scaffold [description]` | Bootstrap `product/` with placeholder docs and `how-to/` extension templates. |
-| `/ds-work-vision [dir]` | Interactively write or review `vision.md`. |
-| `/ds-work-roadmap [dir]` | Interactively write or review `roadmap.md`. |
+| `/ds-work-scaffold [--lite\|--full] [description]` | Bootstrap `product/` with placeholder docs and `how-to/` extension templates. Asks which mode if no flag is passed. |
+| `/ds-work-graduate [dir]` | Promote a lite-mode project to full mode. Adds `vision.md`, `roadmap.md`, `now.md`, `design/`, `reviews/`, `market-research/` and walks through creating vision + roadmap interactively. One-way and additive. |
+| `/ds-work-vision [dir]` | Interactively write or review `vision.md`. *(Full mode only — in lite mode, offers to graduate first.)* |
+| `/ds-work-roadmap [dir]` | Interactively write or review `roadmap.md`. *(Full mode only — in lite mode, offers to graduate first.)* |
 
 ### Milestone planning
 | Command | Purpose |
 |---------|---------|
-| `/ds-work-plan [dir]` | State-driven: writes `M{N}-PRD.md` and/or `M{N}-PLAN.md` for the active milestone, or runs a drift review if both exist. |
+| `/ds-work-plan [dir]` | State-driven: writes `M{N}-PRD.md` and/or `M{N}-PLAN.md` for the active milestone, or runs a drift review if both exist. *(Full mode only — lite mode tracks tasks directly in `milestones.md` and skips PRDs/PLANs.)* |
 
-A milestone moves through five **sub-states**, inferred from file presence + checkbox progress:
+In **full mode**, a milestone moves through five **sub-states**, inferred from file presence + checkbox progress:
 
 | Sub-state | Means | Next action |
 |---|---|---|
@@ -53,6 +69,8 @@ A milestone moves through five **sub-states**, inferred from file presence + che
 | `complete` | All PLAN boxes ticked | `/ds-work-plan` to close out and flip the milestone tick |
 
 `/ds-work-continue` and `/ds-work-status` are sub-state aware.
+
+In **lite mode**, there are no sub-states — `milestones.md` is the plan. `/ds-work-continue` and `/ds-work-status` find the active milestone (first one marked `🔄 in progress`) and surface the next unchecked task within it.
 
 ### Session lifecycle
 Run every session, in order.
@@ -68,7 +86,7 @@ Run every session, in order.
 
 **Capture ladder.** Three surfaces, three commitment levels: `backlog.md` (mind-dump, no priority) → `parking-lot.md` (worth doing eventually, has tags) → `design/M{N}-PLAN.md` (scheduled). Items graduate upward via `/ds-work-backlog sweep` and `/ds-work-parking-lot promote`. They don't have to.
 
-### Review
+### Review *(full mode only)*
 | Command | Purpose |
 |---------|---------|
 | `/ds-work-vision [dir]` | Drift review of `vision.md` against recent milestones. |
@@ -84,7 +102,7 @@ Run every session, in order.
 | `/ds-work-research [dir]` | Structured market research, competitive analysis, or technology deep-dives. Writes to `product/research/` or `product/market-research/`. |
 | `/ds-work-spike [dir]` | Time-boxed technical spike with a single yes/no/A-vs-B question. Writes to `product/research/spikes/`. |
 
-### Communication
+### Communication *(full mode only)*
 | Command | Purpose |
 |---------|---------|
 | `/ds-work-one-pager [dir]` | Create or refresh `one-pager.md` (~500 words). |
@@ -99,8 +117,13 @@ Run every session, in order.
 
 ## The document stack
 
+Every project has `product/ds-work-mode.txt` (contains `full` or `lite`) plus one of two shapes below.
+
+### Full mode
+
 ```
 product/
+├── ds-work-mode.txt             ← contains "full"
 ├── vision.md                    ← why + who
 ├── roadmap.md                   ← what + how
 ├── milestones.md                ← progress tracker
@@ -120,6 +143,25 @@ product/
 ├── reports/                     ← YYYY-MM-DD.md session reports
 └── how-to/                      ← project-specific extensions (see below)
 ```
+
+### Lite mode
+
+```
+product/
+├── ds-work-mode.txt             ← contains "lite"
+├── milestones.md                ← all milestones in one file — THIS FILE IS THE PLAN
+├── parking-lot.md               ← unscheduled work
+├── backlog.md                   ← low-commitment mind-dump
+├── project-management-principles.md   ← lite-variant principles doc
+├── research/
+│   └── spikes/
+├── operations/
+├── learnings/
+├── reports/
+└── how-to/                      ← only continue, halt, status, update (no plan, no challenge)
+```
+
+Skipped vs full: `vision.md`, `roadmap.md`, `now.md`, `design/`, `reviews/`, `market-research/`, `one-pager.md`, `elevator-pitch.md`, and `how-to/ds-work-{plan,challenge}.md`.
 
 ---
 
@@ -173,15 +215,25 @@ After committing and pushing, also:
 
 ## Typical workflows
 
-**Starting a new project**
+**Starting a new full-mode project**
 ```
-/ds-work-scaffold [description]
+/ds-work-scaffold --full [description]
 /ds-work-vision
 /ds-work-roadmap
 # edit product/how-to/ds-work-halt.md — add infra shutdown steps
 # edit milestones.md — replace placeholder tasks with real ones
 /ds-work-plan
 /ds-work-continue
+```
+
+**Starting a new lite-mode project**
+```
+/ds-work-scaffold --lite [description]
+# edit product/milestones.md — replace placeholder milestones + tasks
+# edit product/how-to/ds-work-halt.md — add infra shutdown steps (or delete)
+/ds-work-continue
+# ... later, if the project outgrows a flat task list:
+/ds-work-graduate
 ```
 
 **Starting a new milestone**

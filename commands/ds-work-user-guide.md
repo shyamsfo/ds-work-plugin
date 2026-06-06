@@ -15,6 +15,21 @@ The `ds-work-*` commands are a set of Claude Code slash commands for managing so
 
 ---
 
+## Modes: full vs lite
+
+Every project is in one of two modes, recorded in `product/ds-work-mode.txt`:
+
+- **full** (default) — the complete document stack: vision, roadmap, milestones, now, per-milestone PRDs and PLANs, design reviews, market research, one-pager, elevator pitch.
+- **lite** — a stripped-down stack: milestones, backlog, parking-lot, reports, how-to extensions. **No vision, no roadmap, no `now.md`, no per-milestone PRDs/PLANs.** `milestones.md` doubles as the plan.
+
+Pick `lite` when the project has a clear execution path and doesn't need product-level framing or design records. Pick `full` for anything with real product framing, multiple milestones worth designing up front, or external stakeholders. `lite` projects can be promoted to `full` at any time with `/ds-work-graduate`.
+
+Commands that target full-mode-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-challenge`) detect lite mode and offer graduation rather than silently creating files that don't belong.
+
+If `ds-work-mode.txt` is missing, mode defaults to `full` (backward-compatible with all projects scaffolded before this flag existed).
+
+---
+
 ## The Command Map
 
 ### Setup commands
@@ -22,9 +37,10 @@ Run these when starting a new project or filling in empty scaffolded docs.
 
 | Command | What it does |
 |---------|-------------|
-| `/ds-work-scaffold [description]` | Bootstrap a new project — creates the full `product/` directory, placeholder docs, `how-to/` extension templates, and `project-management-principles.md`. Run from the project root. |
-| `/ds-work-vision [dir]` | Interactively create `vision.md` from scratch (if placeholder/missing) or review and update an existing one against current project state. |
-| `/ds-work-roadmap [dir]` | Interactively create `roadmap.md` from scratch (if placeholder/missing) or review and update an existing one against what milestones have proven. |
+| `/ds-work-scaffold [--lite\|--full] [description]` | Bootstrap a new project — creates the `product/` directory, placeholder docs, `how-to/` extension templates, and `project-management-principles.md`. Asks interactively whether to use full or lite mode (or pass `--lite` / `--full` to skip the prompt). Run from the project root. |
+| `/ds-work-graduate [dir]` | Promote a lite project to full mode. Walks vision + roadmap creation interactively, derives `now.md` from existing milestones state, creates `design/`, `reviews/`, `market-research/`, and rewrites `project-management-principles.md` to the full variant. Existing milestones / backlog / parking-lot / reports are preserved as-is. |
+| `/ds-work-vision [dir]` | *(Full mode only)* Interactively create `vision.md` from scratch (if placeholder/missing) or review and update an existing one against current project state. Detects lite mode and suggests `/ds-work-graduate` first. |
+| `/ds-work-roadmap [dir]` | *(Full mode only)* Interactively create `roadmap.md` from scratch (if placeholder/missing) or review and update an existing one against what milestones have proven. Detects lite mode and suggests `/ds-work-graduate` first. |
 
 ### Milestone planning commands
 Run when starting a new milestone, or when an in-progress milestone's plan needs revisiting.
@@ -189,15 +205,31 @@ Each session skill can be extended with a project-specific file in `product/how-
 
 ## Typical Workflows
 
-### Starting a new project
+### Starting a new full-mode project
 ```
-/ds-work-scaffold [description]   # create product/ structure
+/ds-work-scaffold [description]   # asks for mode interactively — answer "full"
+                                  # (or pass --full to skip the prompt)
 /ds-work-vision                   # fill in vision.md interactively
 /ds-work-roadmap                  # fill in roadmap.md interactively
 # edit product/how-to/ds-work-halt.md — add your infra shutdown steps
 # edit milestones.md — replace placeholder tasks with real ones
 /ds-work-plan                     # plan M1 — writes M1-PRD.md and M1-PLAN.md
 /ds-work-continue                 # start first session
+```
+
+### Starting a new lite-mode project
+```
+/ds-work-scaffold [description]   # asks for mode interactively — answer "lite"
+                                  # (or pass --lite to skip the prompt)
+# edit product/milestones.md — replace placeholder milestones with real ones
+# edit product/how-to/ds-work-halt.md — add your infra shutdown steps (or delete)
+/ds-work-continue                 # start first session
+```
+
+### Graduating a lite project to full
+```
+/ds-work-graduate     # walks vision + roadmap creation, derives now.md, adds design/ + reviews/, flips mode marker
+/ds-work-plan         # plan the active milestone — writes its first M{N}-PRD.md + M{N}-PLAN.md
 ```
 
 ### Starting a new milestone

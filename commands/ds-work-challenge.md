@@ -11,6 +11,20 @@ The target directory is: `product/` (default). If the user wants a different dir
 
 ---
 
+## Step 0 — Lite-mode gate
+
+Read `<dir>/ds-work-mode.txt` if it exists.
+
+- If the file contains `lite`: **stop here.** The challengeable artifacts (vision, roadmap, milestone PRD, milestone PLAN) don't exist in lite mode — `milestones.md` is a flat task list, not a spec worth pressure-testing. Tell the user:
+
+  > This project is in lite mode — there are no planning artifacts to challenge. Adversarial review targets vision, roadmap, milestone PRDs, or milestone PLANs, none of which exist in lite mode. If you need to pressure-test the project's direction, run `/ds-work-graduate` first to promote to full mode and create those documents.
+
+  Then stop.
+
+- If the file contains `full` or does not exist: continue with Step 1 below.
+
+---
+
 ## Step 1 — Identify the target
 
 Parse `$ARGUMENTS`. Expected form: `<target>` or `<target> <milestone-id>`.

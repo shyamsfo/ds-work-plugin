@@ -7,9 +7,15 @@ Append a timestamped progress snapshot to today's session report. Mid-session ch
 
 The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
+## 0. Detect the project mode
+
+Read `<dir>/ds-work-mode.txt` if it exists. Its single line is either `lite` or `full`. Missing → default to `full` (backward compatible).
+
+In lite mode, skip `now.md` (it doesn't exist). Otherwise behavior is identical.
+
 ## Steps
 
-1. Read `<dir>/now.md` and `<dir>/milestones.md` to understand current state.
+1. Read `<dir>/milestones.md` to understand current state. In **full mode** also read `<dir>/now.md`. In **lite mode** there is no `now.md` — milestones.md alone is enough.
 
 2. Run `git log --oneline -6` and `git status --short` to see what has changed since last commit.
 

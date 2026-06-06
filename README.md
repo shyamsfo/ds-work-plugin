@@ -1,8 +1,19 @@
 # ds-work
 
-A Claude Code plugin that adds 16 lightweight project-management slash commands — vision, roadmap, milestones, session lifecycle, parking lot, backlog, and review — for managing software projects end-to-end.
+A Claude Code plugin that adds 17 lightweight project-management slash commands — vision, roadmap, milestones, session lifecycle, parking lot, backlog, and review — for managing software projects end-to-end.
 
 All commands are prefixed with `/ds-work-`.
+
+## Two modes: full or lite
+
+`/ds-work-scaffold` asks which mode you want before doing anything:
+
+- **full** — the complete stack: `vision.md`, `roadmap.md`, `now.md`, per-milestone PRDs + PLANs, design reviews, market research. Best when there's a real product story, multiple milestones with design decisions to capture, or external stakeholders.
+- **lite** — a stripped-down stack: just `milestones.md` (all milestones in one file with a flat task checklist — *this file is the plan*), `backlog.md`, `parking-lot.md`, and `reports/`. No vision, no roadmap, no now.md, no PRDs. Best for simple projects with a clear execution path.
+
+The chosen mode is recorded in `product/ds-work-mode.txt`. Every other command reads that file and branches its behavior. Commands that target full-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-challenge`) detect lite mode and offer to graduate before doing anything.
+
+Pass `--lite` or `--full` to `/ds-work-scaffold` to skip the prompt. Promote a lite project to full at any time with `/ds-work-graduate` — it's one-way and additive (existing files preserved, full-mode artifacts added alongside).
 
 ## Install
 
@@ -27,12 +38,13 @@ The rest of this README is the short version.
 ## What you get
 
 ### Setup
-- `/ds-work-scaffold [description]` — bootstrap `product/` directory with placeholder docs
-- `/ds-work-vision [dir]` — interactively create/review `vision.md`
-- `/ds-work-roadmap [dir]` — interactively create/review `roadmap.md`
+- `/ds-work-scaffold [--lite|--full] [description]` — bootstrap `product/` directory with placeholder docs (asks which mode if no flag)
+- `/ds-work-graduate [dir]` — promote a lite-mode project to full mode (adds vision, roadmap, now.md, design/, reviews/)
+- `/ds-work-vision [dir]` — interactively create/review `vision.md` *(full mode only)*
+- `/ds-work-roadmap [dir]` — interactively create/review `roadmap.md` *(full mode only)*
 
 ### Milestone planning
-- `/ds-work-plan [dir]` — write/refresh `M{N}-PRD.md` and `M{N}-PLAN.md` for the active milestone
+- `/ds-work-plan [dir]` — write/refresh `M{N}-PRD.md` and `M{N}-PLAN.md` for the active milestone *(full mode only — lite mode tracks tasks directly in `milestones.md`)*
 
 ### Session lifecycle
 - `/ds-work-continue [dir]` — start of session: resume brief + next PLAN item
@@ -43,25 +55,27 @@ The rest of this README is the short version.
 - `/ds-work-backlog [add <text> | sweep]` — low-commitment mind-dump (one rung below the parking lot)
 
 ### Review
-- `/ds-work-challenge <target> [milestone-id]` — adversarial pressure-test of a planning artifact
+- `/ds-work-challenge <target> [milestone-id]` — adversarial pressure-test of a planning artifact *(full mode only)*
 
 ### Exploration
 - `/ds-work-research [dir]` — structured research documents (market, tech deep-dives)
 - `/ds-work-spike [dir]` — time-boxed technical spikes
 
 ### Communication
-- `/ds-work-one-pager [dir]` — generate `one-pager.md`
-- `/ds-work-elevator-pitch [dir]` — generate pitch variants
+- `/ds-work-one-pager [dir]` — generate `one-pager.md` *(full mode only)*
+- `/ds-work-elevator-pitch [dir]` — generate pitch variants *(full mode only)*
 
 ### Reference
 - `/ds-work-user-guide` — full inline user guide
 
 ## The document stack
 
-Every project using this system has the same shape under `product/`:
+Every project using this system has a `product/ds-work-mode.txt` marker plus one of two shapes under `product/`:
 
+**Full mode**
 ```
 product/
+├── ds-work-mode.txt          ← contains "full"
 ├── vision.md                 ← why + who
 ├── roadmap.md                ← what + how
 ├── milestones.md             ← progress tracker
@@ -73,6 +87,18 @@ product/
 ├── research/                 ← deep-dives + spikes/
 ├── reports/                  ← session history
 └── how-to/                   ← project-specific extensions
+```
+
+**Lite mode**
+```
+product/
+├── ds-work-mode.txt          ← contains "lite"
+├── milestones.md             ← all milestones in one file — THIS FILE IS THE PLAN
+├── parking-lot.md            ← unscheduled work
+├── backlog.md                ← low-commitment mind-dump
+├── research/                 ← deep-dives + spikes/
+├── reports/                  ← session history
+└── how-to/                   ← project-specific extensions (fewer files than full mode)
 ```
 
 ## Customizing commands per project
@@ -118,9 +144,9 @@ How-to files contain **only** the project-specific additions — the generic ste
 
 ## Typical workflows
 
-**Starting a new project**
+**Starting a new full-mode project**
 ```
-/ds-work-scaffold [description]
+/ds-work-scaffold --full [description]
 /ds-work-vision
 /ds-work-roadmap
 # edit product/how-to/ds-work-halt.md — add your infra shutdown steps
@@ -128,7 +154,16 @@ How-to files contain **only** the project-specific additions — the generic ste
 /ds-work-continue      # start first session
 ```
 
-**Daily session**
+**Starting a new lite-mode project**
+```
+/ds-work-scaffold --lite [description]
+# edit product/milestones.md — replace placeholder milestones + tasks
+/ds-work-continue      # start first session
+# ... later, if the project outgrows a flat task list:
+/ds-work-graduate      # promote to full mode (one-way, additive)
+```
+
+**Daily session** (same in both modes)
 ```
 /ds-work-continue      # resume brief
 # ... do the work ...

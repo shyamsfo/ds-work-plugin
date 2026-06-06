@@ -7,19 +7,25 @@ Give a concise, actionable summary of what to work on next.
 
 The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
+## 0. Detect the project mode
+
+Read `<dir>/ds-work-mode.txt` if it exists. Its single line is either `lite` or `full`. Missing → default to `full` (backward compatible).
+
+Branch the steps below by mode.
+
 ## Steps
 
-1. Read all of these in parallel:
-   - `<dir>/now.md` — current focus and what was just done
-   - `<dir>/milestones.md` — task checklist across all milestones
-   - `<dir>/roadmap.md` — architecture context (skim only)
-   - The most recent file in `<dir>/reports/` (latest session report)
+1. Read what's available:
+   - **Full mode**: `<dir>/now.md`, `<dir>/milestones.md`, `<dir>/roadmap.md` (skim only), and the most recent file in `<dir>/reports/`.
+   - **Lite mode**: `<dir>/milestones.md` and the most recent file in `<dir>/reports/`. There is no `now.md` and no `roadmap.md`.
 
 2. If `<dir>/how-to/ds-work-status.md` exists, read it now and incorporate any project-specific context gathering (e.g. reading a cluster state file, checking infra status) before assembling the output.
 
-3. From milestones.md: find the active milestone (first one marked `🔄 in progress`) and note its ID (e.g. `M2`). Within it, also note the first `[~]` task (in progress) or `[ ]` task (next to start) for fallback context.
+3. From milestones.md: find the active milestone (first one marked `🔄 in progress`) and note its ID (e.g. `M2`). Within it, also note the first `[~]` task (in progress) or `[ ]` task (next to start).
 
-4. Look for the milestone's planning artifacts in `<dir>/design/`:
+4. **Lite mode**: the "next item" is the unchecked task identified in Step 3. Skip the rest of this step and jump to Step 5.
+
+   **Full mode**: look for the milestone's planning artifacts in `<dir>/design/`:
    - `M{N}-PRD.md` — milestone spec
    - `M{N}-PLAN.md` — sub-task checklist
 
@@ -48,7 +54,9 @@ The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
 6. If `<dir>/parking-lot.md` exists, count items under `## Open`. Note the count (only surfaced in output if > 0).
 
-7. Output a short, scannable answer:
+7. Output a short, scannable answer.
+
+**Full mode**:
 
 ```
 ## What's Next
@@ -68,6 +76,28 @@ The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
 **After that**:
 <The next 2–3 unchecked PLAN items in sequence, when applicable.>
+
+<!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
+**Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
+```
+
+**Lite mode** — even tighter, no sub-state, no PRD context:
+
+```
+## What's Next (lite)
+
+**Milestone**: <milestone name> (<X/Y tasks done>)
+**Next task**: <first [~] or [ ] task verbatim>
+
+**Prerequisite check**:
+- Infrastructure: <up / hibernated / unknown>
+- Any blocker: <yes/no — describe if yes>
+
+**Concrete first action**:
+<The exact command to run or file to edit for the next task.>
+
+**After that**:
+<The next 2–3 unchecked tasks in sequence, if any.>
 
 <!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.

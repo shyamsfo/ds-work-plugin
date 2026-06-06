@@ -7,6 +7,18 @@ You are helping the user craft a tight elevator pitch for their project. This is
 
 The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
+## 0. Lite-mode gate
+
+Read `<dir>/ds-work-mode.txt` if it exists.
+
+- If the file contains `lite`: **stop here.** A pitch needs problem framing, customer, and north star — content that lives in `vision.md`. A lite project has none of that. Tell the user:
+
+  > This project is in lite mode — it doesn't have a vision document to draw a pitch from. Run `/ds-work-graduate` first to promote the project to full mode and create `vision.md` (and optionally `one-pager.md`), then re-run `/ds-work-elevator-pitch`.
+
+  Then stop.
+
+- If the file contains `full` or does not exist: continue with Step 1 below.
+
 ## 1. Gather source material
 
 Read all of these in parallel:

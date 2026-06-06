@@ -9,6 +9,20 @@ The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
 ---
 
+## Step 0 — Lite-mode gate
+
+Read `<dir>/ds-work-mode.txt` if it exists.
+
+- If the file contains `lite`: **stop here.** This project is in lite mode and has no `roadmap.md`. Tell the user:
+
+  > This project is in lite mode — it doesn't have a roadmap. If the project has grown enough to need an architecture document and a milestone plan with key decisions, run `/ds-work-graduate` first. That promotes the project to full mode and walks you through creating `roadmap.md` interactively.
+
+  Then stop. Do not create `roadmap.md` in a lite project.
+
+- If the file contains `full` or does not exist: continue with Step 1 below.
+
+---
+
 ## Step 1 — Assess what exists
 
 Read `<dir>/roadmap.md`.

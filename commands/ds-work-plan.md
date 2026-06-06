@@ -13,6 +13,22 @@ The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
 ---
 
+## Step 0 — Lite-mode gate
+
+Read `<dir>/ds-work-mode.txt` if it exists.
+
+- If the file contains `lite`: **stop here.** This project is in lite mode — there are no per-milestone PRD/PLAN files; `milestones.md` is the plan and is edited directly. Tell the user:
+
+  > This project is in lite mode — milestones are flat task lists in `milestones.md`, not separate PRD + PLAN files. If a milestone has grown enough to need a real spec (design decisions to capture, scope worth pinning down, sub-task checklist with verification steps), run `/ds-work-graduate` first. That promotes the project to full mode and lets you write `M{N}-PRD.md` and `M{N}-PLAN.md` for that milestone (and future ones).
+  >
+  > Otherwise, just edit `milestones.md` directly — add/remove tasks under the active milestone's section.
+
+  Then stop. Do not create PRD/PLAN files in a lite project.
+
+- If the file contains `full` or does not exist: continue with Step 1 below.
+
+---
+
 ## Step 1 — Identify the active milestone and assess state
 
 Read these in parallel:

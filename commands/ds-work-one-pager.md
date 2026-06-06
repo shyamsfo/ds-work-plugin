@@ -7,6 +7,18 @@ You are helping the user create or refine a one-pager for their project. This is
 
 The target directory is: `$ARGUMENTS` (use `product/` if empty or not provided).
 
+## 0. Lite-mode gate
+
+Read `<dir>/ds-work-mode.txt` if it exists.
+
+- If the file contains `lite`: **stop here.** A one-pager synthesises vision + roadmap + milestone state into a single-page summary, and a lite project has no vision or roadmap to draw from. Tell the user:
+
+  > This project is in lite mode — it doesn't have a vision or roadmap to synthesise into a one-pager. Run `/ds-work-graduate` first to promote the project to full mode and create those source documents, then re-run `/ds-work-one-pager`.
+
+  Then stop.
+
+- If the file contains `full` or does not exist: continue with Step 1 below.
+
 ## 1. Gather source material
 
 Read all of these in parallel:

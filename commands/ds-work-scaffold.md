@@ -1,16 +1,56 @@
 ---
 name: ds-work-scaffold
-description: Bootstrap a new project with the standard PM structure — product/ directory, placeholder docs, how-to extension files, and project-management-principles.md. Run from the project root.
+description: Bootstrap a new project with the standard PM structure — product/ directory, placeholder docs, how-to extension files, and project-management-principles.md. Asks interactively whether you want full or lite mode (or pass --lite / --full to skip the prompt). Run from the project root.
 ---
 
 Bootstrap a new project with the standard project management structure.
 
-Parse `$ARGUMENTS` for an optional project description (used to fill in placeholders). If not provided, use generic placeholder text.
+## Modes
+
+Parse `$ARGUMENTS`. The first token may be `--lite` or `--full`. Everything after the mode token (if any) is treated as an optional project description and may be used to fill in placeholders. If no description is provided, use generic placeholder text.
+
+There are two modes for scaffolded projects:
+
+- **full** — complete document stack: vision, roadmap, milestones, now, design/, reviews/, market-research/, etc. Use when the project has a real product story, multiple milestones with design decisions to capture, or external stakeholders to communicate with.
+- **lite** — stripped-down stack: just milestones, backlog, parking-lot, reports, and how-to extensions. No vision, no roadmap, no now.md, no per-milestone PRDs/PLANs. Use for simple projects with a clear execution path that don't need product-level framing or design records. `milestones.md` doubles as *the* plan.
+
+### Step 0a — Pick mode (interactive)
+
+If `$ARGUMENTS` contains `--lite` or `--full`, use that mode and proceed.
+
+If neither flag is passed, **ask the user before doing anything else**:
+
+```
+This will scaffold a new project. Pick a mode:
+
+  1. full — full PM stack: vision.md, roadmap.md, now.md, per-milestone PRDs + PLANs,
+            design reviews, market research. Best for projects with real product
+            framing, multiple milestones with design decisions, or external stakeholders.
+
+  2. lite — stripped stack: just milestones.md (with all milestones in one file),
+            backlog.md, parking-lot.md, and reports/. No vision, no roadmap, no PRDs.
+            Best for projects with a clear execution path that don't need
+            product-level framing. milestones.md doubles as the plan. Can be promoted
+            to full later with /ds-work-graduate.
+
+Which mode? (full / lite, default: full)
+```
+
+Wait for the user's reply. Accept `full`, `f`, `1` → full mode; `lite`, `l`, `2` → lite mode; empty / `y` / anything ambiguous → ask again (do not assume). Once you have a clear answer, proceed.
+
+### Step 0b — Record the mode
+
+Record the chosen mode in `product/ds-work-mode.txt` — a visible, single-line file containing exactly `lite` or `full`. All other ds-work-* commands read this file to branch their behavior. If the file is missing, mode defaults to `full` so projects scaffolded before this flag existed continue to work.
+
+A lite project can be promoted later with `/ds-work-graduate`, which flips the mode marker and creates the missing artifacts interactively.
 
 ## What this creates
 
+### Full mode
+
 ```
 product/
+├── ds-work-mode.txt                 # contains "full"
 ├── vision.md                     # why + who (problem, customer, north star)
 ├── roadmap.md                    # architecture + milestone plan (placeholder)
 ├── milestones.md                 # progress tracker (placeholder)
@@ -34,11 +74,63 @@ product/
     └── ds-work-update.md              # project-specific update additions (template)
 ```
 
+### Lite mode
+
+```
+product/
+├── ds-work-mode.txt                 # contains "lite"
+├── milestones.md                 # ALL milestones live here — sections per milestone, each with goal + task checklist. Doubles as the plan.
+├── backlog.md                    # low-commitment mind-dump (placeholder)
+├── parking-lot.md                # unscheduled work items (placeholder)
+├── project-management-principles.md   # canonical PM reference (copied from scaffold, lite variant)
+├── research/                     # pre-decision options analyses and deep dives (empty)
+│   └── spikes/                   # time-boxed feasibility investigations
+├── operations/                   # cluster runbooks, infra how-tos (empty)
+├── learnings/                    # post-hoc reports, incident retrospectives (empty)
+├── reports/                      # session reports live here (empty, ready to use)
+└── how-to/
+    ├── ds-work-continue.md            # project-specific resume additions (template)
+    ├── ds-work-halt.md                # project-specific shutdown steps (template)
+    ├── ds-work-status.md              # project-specific prerequisite checks (template)
+    └── ds-work-update.md              # project-specific update additions (template)
+```
+
+**Skipped in lite mode:** `vision.md`, `roadmap.md`, `now.md`, `design/`, `reviews/`, `market-research/`, and the `how-to/ds-work-{plan,challenge}.md` extension files. Commands that target those artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-challenge`) detect lite mode and offer to graduate before doing anything.
+
 ## Steps
 
 ### 1. Check for existing structure
 
 If `product/` already exists, warn the user: "product/ already exists — scaffolding will add missing files but will not overwrite existing ones." Proceed file by file, skipping any that already exist.
+
+If `product/ds-work-mode.txt` already exists and its content conflicts with the mode requested via flag, stop and tell the user — do not overwrite the marker silently. Suggest `/ds-work-graduate` if they want to move from lite to full.
+
+### 1a. Write the mode marker
+
+Create `product/ds-work-mode.txt` containing exactly one of:
+- `lite`
+- `full`
+
+Single line, no trailing content. This is the first file to create — every subsequent step branches on it.
+
+### 1b. Lite-mode file set
+
+**If mode is `lite`, skip the following steps entirely and create only the files marked `[lite]` below:**
+
+- Step 5 (milestones.md) — use the **lite variant** template described in Step 5.
+- Step 5a (parking-lot.md)
+- Step 5b (backlog.md)
+- Step 6 (how-to/ds-work-continue.md)
+- Step 7 (how-to/ds-work-halt.md)
+- Step 8 (how-to/ds-work-update.md)
+- Step 9 (how-to/ds-work-status.md)
+- Step 10 (project-management-principles.md) — but use the **lite variant** text described in Step 10.
+- Step 11 (placeholder `.gitkeep` files) — only for `research/`, `research/spikes/`, `operations/`, `learnings/`, `reports/`. Skip `design/`, `reviews/`, `market-research/`.
+- Step 12 (report back) — use the **lite variant** of the next-steps message described in Step 12.
+
+Skip Steps 2 (roadmap.md), 3 (vision.md), 4 (now.md), 9a (how-to/ds-work-plan.md), 9b (how-to/ds-work-challenge.md).
+
+**If mode is `full`, run all steps below.**
 
 ### 2. Create product/roadmap.md
 
@@ -148,11 +240,13 @@ See `product/market-research/` for supporting research.
 
 ### 5. Create product/milestones.md
 
+**Full mode** uses this template:
+
 ```markdown
 # Milestones
 
 Lightweight task tracker. Update status markers and checkboxes as work progresses.
-Architecture context lives in `roadmap.md`.
+Architecture context lives in `roadmap.md`. Per-milestone design lives in `design/M{N}-PRD.md`.
 
 ## Status Key
 
@@ -189,6 +283,62 @@ Task checkboxes:
 
 - Milestones are sequential by dependency, not by calendar priority
 - Each milestone must pass its exit criteria before the next begins
+```
+
+**Lite mode** uses this template instead. In lite mode this file *is* the plan — there are no PRD/PLAN files. Each milestone is a single section with its goal and a flat task checklist; mark the active one `🔄 in progress`, the rest `⏳ pending`.
+
+```markdown
+# Milestones
+
+All milestones live in this file. Each section is one milestone with its goal, status, task checklist, and exit criteria. There are no separate PRD/PLAN files in lite mode — this file is the plan.
+
+## Status Key
+
+```
+⏳ pending      — not started
+🔄 in progress  — actively being worked
+✅ done         — exit criteria met
+🚫 blocked      — waiting on something external
+```
+
+Task checkboxes:
+- `[ ]` not done
+- `[x]` done
+- `[~]` in progress
+- `[-]` skipped / won't do
+
+The active milestone is the first one marked `🔄 in progress`. `/ds-work-continue` and `/ds-work-status` find the next `[~]` or `[ ]` task within it.
+
+---
+
+## M1 — <Milestone Name>
+**Status**: 🔄 in progress
+**Goal**: <one sentence>
+
+- [ ] <Task 1>
+- [ ] <Task 2>
+- [ ] <Task 3>
+
+**Exit criteria**: <How do you know this milestone is done?>
+
+---
+
+## M2 — <Milestone Name>
+**Status**: ⏳ pending
+**Goal**: <one sentence>
+
+- [ ] <Task 1>
+- [ ] <Task 2>
+
+**Exit criteria**: <How do you know this milestone is done?>
+
+---
+
+## Notes
+
+- Milestones are sequential by dependency, not by calendar priority
+- Each milestone must pass its exit criteria before the next begins
+- If a milestone grows enough to need a real spec, run `/ds-work-graduate` to promote the project to full mode
 ```
 
 ### 4. Create product/now.md
@@ -395,7 +545,9 @@ the challenger should always pressure-test against
 
 ### 10. Create product/project-management-principles.md
 
-Write the following content exactly as the file:
+**Full mode**: write the content below (from `# Project Management Principles` down to the *"To update the principles for all future projects…"* footer) verbatim into `product/project-management-principles.md`.
+
+**Lite mode**: write the *lite variant* shown at the end of this step instead — a much shorter principles doc tailored to the lite stack.
 
 ---
 
@@ -707,9 +859,124 @@ Log significant direction changes, contested calls, and anything a future reader
 
 ---
 
+#### Lite-variant principles doc
+
+In lite mode, write this shorter version instead. It explains the smaller stack and the graduation path; the full version above is unnecessarily heavy for a project that doesn't need vision/roadmap/PRDs.
+
+```markdown
+# Project Management Principles — Lite Mode
+
+This is a **lite-mode** project. It uses a stripped-down version of the `ds-work-*` system: just milestones, backlog, parking-lot, and session reports. Use it when the work has a clear execution path and doesn't need product-level framing or per-milestone design records.
+
+For the full command reference, run **`/ds-work-user-guide`**.
+
+To promote this project to full mode (adds vision.md, roadmap.md, now.md, per-milestone PRDs/PLANs, design reviews), run **`/ds-work-graduate`**.
+
+---
+
+## The Document Stack (lite)
+
+```
+product/
+├── ds-work-mode.txt               ← contains "lite"
+├── milestones.md               ← all milestones in one file. Sections per milestone with goal + task checklist. **This file IS the plan.**
+├── backlog.md                  ← low-commitment mind-dump (no priority, no tags)
+├── parking-lot.md              ← unscheduled work items (bugs, chores, ideas captured for later)
+├── project-management-principles.md   ← this file
+├── research/                   ← pre-decision options analyses (ds-work-research)
+│   └── spikes/                 ← time-boxed feasibility investigations (ds-work-spike)
+├── operations/                 ← cluster runbooks, infra how-tos
+├── learnings/                  ← post-hoc reports, incident retrospectives
+├── reports/                    ← session history (YYYY-MM-DD.md, written by update/halt)
+└── how-to/                     ← project-specific skill extensions
+    ├── ds-work-continue.md
+    ├── ds-work-halt.md
+    ├── ds-work-status.md
+    └── ds-work-update.md
+```
+
+**Skipped vs full mode:** `vision.md`, `roadmap.md`, `now.md`, `design/` (PRDs + PLANs), `reviews/` (challenge reports), `market-research/`, `one-pager.md`, `elevator-pitch.md`, and the `how-to/ds-work-{plan,challenge}.md` extensions.
+
+### `milestones.md` — *the plan*
+
+All milestones live here, one section each. The active milestone is the first one marked `🔄 in progress`. `/ds-work-continue` and `/ds-work-status` find the next `[~]` or `[ ]` task within it.
+
+Task checkboxes:
+- `[ ]` not done · `[x]` done · `[~]` in progress · `[-]` skipped / won't do
+
+Milestone status markers:
+- `⏳ pending` · `🔄 in progress` · `✅ done` · `🚫 blocked`
+
+There is no separate "sub-state" (no PRD/PLAN files), so `/ds-work-continue` and `/ds-work-status` simply surface the next unchecked task and call it done. If a milestone outgrows a flat checklist, run `/ds-work-graduate`.
+
+### `backlog.md` — mind-dump (unchanged from full mode)
+
+Capture half-formed thoughts. No priority. Append-only. Managed by `/ds-work-backlog`. Sweep periodically to promote items to the parking-lot or drop them silently.
+
+### `parking-lot.md` — unscheduled work (unchanged from full mode)
+
+Items that are worth tackling eventually but aren't in the active milestone. Tagged. Managed by `/ds-work-parking-lot`. In lite mode, `promote` adds the item to the active milestone's task list in `milestones.md` (not to a PLAN file, since none exists).
+
+### `reports/` — session history (unchanged from full mode)
+
+One file per day, written by `/ds-work-update` (mid-session) and `/ds-work-halt` (session end).
+
+---
+
+## Commands Available in Lite Mode
+
+| Command | Notes |
+|---|---|
+| `/ds-work-continue` | Reads `milestones.md`, finds active milestone + next unchecked task |
+| `/ds-work-status` | Same as continue, but tighter output |
+| `/ds-work-update` | Mid-session snapshot to today's report — same as full mode but skips `now.md` |
+| `/ds-work-halt` | Tick `milestones.md`, write report, commit, push, run project-specific teardown. Does not touch a PLAN file because there isn't one. |
+| `/ds-work-backlog` | Unchanged from full mode |
+| `/ds-work-parking-lot` | Unchanged from full mode |
+| `/ds-work-spike` | Unchanged from full mode |
+| `/ds-work-research` | Unchanged from full mode |
+| `/ds-work-graduate` | Promote this project to full mode |
+
+Commands that target full-mode-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-challenge`) detect lite mode and offer to run `/ds-work-graduate` first. They do not create vision/roadmap/PRDs in a lite project.
+
+---
+
+## Typical Session Flow
+
+```
+Start session
+  → /ds-work-continue           (reads milestones.md, surfaces next task)
+
+Do the work
+  → edit files, run commands
+  → /ds-work-update             (optional mid-session checkpoint)
+
+End session
+  → /ds-work-halt               (ticks milestones.md, writes report, commits, pushes)
+```
+
+---
+
+## When to Graduate
+
+Run `/ds-work-graduate` when:
+- The project picks up a real product story (problem framing, customer, north star) worth writing down
+- A milestone has enough internal design decisions to need its own spec (PRD) and execution plan (PLAN) — flat checklists in `milestones.md` stop being enough
+- You want adversarial reviews of planning artifacts (`/ds-work-challenge`)
+- You need external-facing summaries (`/ds-work-one-pager`, `/ds-work-elevator-pitch`)
+
+Graduation is one-way and additive — existing milestones and their checkboxes are preserved as-is; new full-mode artifacts (vision.md, roadmap.md, now.md, design/) are added alongside.
+
+---
+
+*This is the lite-variant principles doc. The canonical copy is distributed by `/ds-work-scaffold` when invoked with `--lite`. To update for all future lite projects, edit `~/.claude/commands/ds-work-scaffold.md`.*
+```
+
+---
+
 ### 11. Create empty placeholder files for the empty subdirectories
 
-Create `.gitkeep` files in:
+**Full mode** — create `.gitkeep` files in:
 - `product/design/.gitkeep`
 - `product/reviews/.gitkeep`
 - `product/market-research/.gitkeep`
@@ -719,12 +986,21 @@ Create `.gitkeep` files in:
 - `product/learnings/.gitkeep`
 - `product/reports/.gitkeep`
 
+**Lite mode** — create `.gitkeep` files only in:
+- `product/research/.gitkeep`
+- `product/research/spikes/.gitkeep`
+- `product/operations/.gitkeep`
+- `product/learnings/.gitkeep`
+- `product/reports/.gitkeep`
+
 ### 12. Report back
 
-List every file created (or skipped because it already existed). Then say:
+List every file created (or skipped because it already existed).
+
+**Full mode** — next-steps message:
 
 ```
-Project scaffolded. Next steps:
+Project scaffolded (full mode). Next steps:
 1. Edit product/vision.md — fill in problem, customer, north star
 2. Edit product/roadmap.md — fill in your architecture and milestone plan
 3. Edit product/milestones.md — replace placeholder tasks with real ones
@@ -732,4 +1008,15 @@ Project scaffolded. Next steps:
 5. Edit product/how-to/ds-work-halt.md — add your project's shutdown steps (or delete if none)
 6. Run /ds-work-plan to write M1's PRD and PLAN
 7. Run /ds-work-continue when you're ready to start the first session
+```
+
+**Lite mode** — next-steps message:
+
+```
+Project scaffolded (lite mode). Next steps:
+1. Edit product/milestones.md — replace placeholder milestones + tasks with real ones (mark the first one 🔄 in progress)
+2. Edit product/how-to/ds-work-halt.md — add your project's shutdown steps (or delete if none)
+3. Run /ds-work-continue when you're ready to start the first session
+
+When the project outgrows a flat task list (real design decisions to capture, external stakeholders, vision worth writing down), run /ds-work-graduate to promote to full mode.
 ```

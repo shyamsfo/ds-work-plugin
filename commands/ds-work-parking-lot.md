@@ -99,7 +99,11 @@ Same as default, but in step 3 show only items whose tags include the filter tok
 
 ---
 
-## Sub-flow: promote to PLAN
+## Sub-flow: promote to active milestone
+
+Branch on `<dir>/ds-work-mode.txt` (default `full` if missing):
+
+**Full mode — promote to PLAN:**
 
 1. Identify active milestone `M{N}` from `<dir>/milestones.md`.
 2. Open `<dir>/design/M{N}-PLAN.md`. If it does not exist, abort: *"No PLAN exists for M{N}. Run /ds-work-plan first, or tackle this directly without promoting."*
@@ -113,6 +117,20 @@ Same as default, but in step 3 show only items whose tags include the filter tok
    ```
 5. Trim Done/Dropped tail to 10.
 6. Confirm both edits to the user.
+
+**Lite mode — promote into milestones.md directly:**
+
+1. Identify active milestone `M{N}` (first one marked `🔄 in progress`) in `<dir>/milestones.md`.
+2. Append the item as a new task at the bottom of that milestone's task list, before the `**Exit criteria**` line. Format:
+   ```
+   - [ ] <title>  *(from parking-lot, parked YYYY-MM-DD)*
+   ```
+3. In `parking-lot.md`, move the item from `## Open` to `## Done / Dropped (last 10)` with marker `[→]`:
+   ```
+   - [→] <added-date> → YYYY-MM-DD — <title>  *(promoted to M{N})*
+   ```
+4. Trim Done/Dropped tail to 10.
+5. Confirm both edits to the user.
 
 ---
 
