@@ -33,6 +33,7 @@ Promote a lite project to full at any time with `/ds-work-graduate`. Graduation 
 | What am I working on right now? | `now.md` |
 | What's parked for later (not yet scheduled)? | `parking-lot.md` |
 | What half-formed thought do I want to remember? | `backlog.md` |
+| What needs periodic re-touching (refresh, sweep, re-validate)? | `recurring.md` |
 | What exactly does milestone N require? | `design/M{N}-PRD.md` |
 | What's the execution checklist for milestone N? | `design/M{N}-PLAN.md` |
 | Which concerns were raised against a planning artifact? | `reviews/<target>-challenge-YYYY-MM-DD.md` |
@@ -83,8 +84,11 @@ Run every session, in order.
 | `/ds-work-halt [dir]` | End of session | Updates `milestones.md` + `now.md`, writes the session report, commits, pushes, runs project-specific teardown. |
 | `/ds-work-parking-lot [add <text> \| pick \| <tag>]` | Anytime | Manage unscheduled items. `add <text>` appends. `pick` shows suggestions. A tag (`bug`, `chore`, `idea`, `research`) filters. |
 | `/ds-work-backlog [add <text> \| sweep]` | Anytime — a half-formed thought arrives that you might want to revisit but don't want to commit to | Default: shows items (no ranking, no suggestions — backlog is intentionally flat). `add <text>` appends to the bottom. `sweep` walks items one at a time and asks: promote to parking-lot, fold into a PRD's Out-of-scope, delete silently, or skip. |
+| `/ds-work-recurring [add <text> \| done <match> \| sweep]` | Anytime — when a task needs to happen periodically (refresh a snapshot, sweep a dir, re-validate a pin), when you finish such a task, or when the list has stale items | Default: shows overdue + due-soon + on-track + signal-driven, grouped by cadence. `add <text>` appends a new item (asks for cadence + pointer). `done <match>` updates the matched item's "Last run:" to today and appends to Done/History. `sweep` walks stale items and offers keep/adjust-cadence/drop. |
 
 **Capture ladder.** Three surfaces, three commitment levels: `backlog.md` (mind-dump, no priority) → `parking-lot.md` (worth doing eventually, has tags) → `design/M{N}-PLAN.md` (scheduled). Items graduate upward via `/ds-work-backlog sweep` and `/ds-work-parking-lot promote`. They don't have to.
+
+**Recurring is a separate lane, not part of the capture ladder.** `recurring.md` holds tasks that decay and need periodic touching — they never move to Done because they never terminate. If an item will complete exactly once and then be finished, it belongs in `parking-lot.md`, not `recurring.md`. `/ds-work-status` and `/ds-work-continue` surface an "N overdue" line when relevant; `/ds-work-halt` asks after each session whether any recurring items got done. Cadence markers: 🕐 weekly · 🕐🕐 monthly · 🕐🕐🕐 quarterly · 📡 signal-driven.
 
 ### Review *(full mode only)*
 | Command | Purpose |
@@ -130,6 +134,7 @@ product/
 ├── now.md                       ← session pointer
 ├── parking-lot.md               ← unscheduled work
 ├── backlog.md                   ← low-commitment mind-dump (no priority, no tags)
+├── recurring.md                 ← recurring-maintenance list (tasks that decay and need periodic touching)
 ├── project-management-principles.md   ← how this system works
 ├── one-pager.md
 ├── elevator-pitch.md
@@ -152,6 +157,7 @@ product/
 ├── milestones.md                ← all milestones in one file — THIS FILE IS THE PLAN
 ├── parking-lot.md               ← unscheduled work
 ├── backlog.md                   ← low-commitment mind-dump
+├── recurring.md                 ← recurring-maintenance list
 ├── project-management-principles.md   ← lite-variant principles doc
 ├── research/
 │   └── spikes/
@@ -207,6 +213,7 @@ After committing and pushing, also:
 | `milestones.md` | None — git history + session reports | Changes too often |
 | `parking-lot.md` | `Open` → `Done / Dropped (last 10)` tail | A working surface, not an archive |
 | `backlog.md` | None — items disappear (deleted), graduate (promoted), or fold (into PRD). No archive. | Backlog is intentionally lossy; if you need a record, promote to parking-lot first |
+| `recurring.md` | Items stay in `## Open`; each completion updates the item's "Last run" field and appends a one-liner to `## Done / History (last 10)` tail | Recurring items don't complete — they get refreshed. The Done tail is a lightweight audit trail; session reports are the long-term record |
 | PRDs | Decision Log at bottom | Milestone-level decisions future-you will question |
 | PLANs | Checkboxes are the change record | A log would duplicate them |
 | Challenge reports | Append-only files, timestamped | Snapshots in time |

@@ -1,6 +1,6 @@
 # ds-work
 
-A Claude Code plugin that adds 17 lightweight project-management slash commands — vision, roadmap, milestones, session lifecycle, parking lot, backlog, and review — for managing software projects end-to-end.
+A Claude Code plugin that adds 18 lightweight project-management slash commands — vision, roadmap, milestones, session lifecycle, parking lot, backlog, recurring maintenance, and review — for managing software projects end-to-end.
 
 All commands are prefixed with `/ds-work-`.
 
@@ -53,6 +53,7 @@ The rest of this README is the short version.
 - `/ds-work-halt [dir]` — end of session: update docs, commit, push, shut down infra
 - `/ds-work-parking-lot [add <text> | pick | <tag>]` — manage unscheduled work items
 - `/ds-work-backlog [add <text> | sweep]` — low-commitment mind-dump (one rung below the parking lot)
+- `/ds-work-recurring [add <text> | done <match> | sweep]` — recurring-maintenance list (tasks that decay and need periodic touching)
 
 ### Review
 - `/ds-work-challenge <target> [milestone-id]` — adversarial pressure-test of a planning artifact *(full mode only)*
@@ -82,6 +83,7 @@ product/
 ├── now.md                    ← session pointer
 ├── parking-lot.md            ← unscheduled work
 ├── backlog.md                ← low-commitment mind-dump
+├── recurring.md              ← recurring-maintenance list
 ├── design/                   ← M{N}-PRD.md + M{N}-PLAN.md per milestone
 ├── reviews/                  ← challenge reports
 ├── research/                 ← deep-dives + spikes/
@@ -96,6 +98,7 @@ product/
 ├── milestones.md             ← all milestones in one file — THIS FILE IS THE PLAN
 ├── parking-lot.md            ← unscheduled work
 ├── backlog.md                ← low-commitment mind-dump
+├── recurring.md              ← recurring-maintenance list
 ├── research/                 ← deep-dives + spikes/
 ├── reports/                  ← session history
 └── how-to/                   ← project-specific extensions (fewer files than full mode)

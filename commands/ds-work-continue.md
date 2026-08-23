@@ -29,6 +29,7 @@ If none of these files exist in the given directory, search the repo for files w
 - Run `git log --oneline -8` to see recent commits
 - Run `git status` to surface any uncommitted or untracked changes
 - If `<dir>/parking-lot.md` exists, count items under `## Open` (used in the resume brief if > 0)
+- If `<dir>/recurring.md` exists, count items under `## Open` and compute how many are **overdue** (today − last_run > cadence_days, or "Last run: never"). Cadence intervals: 🕐 = 7d, 🕐🕐 = 30d, 🕐🕐🕐 = 90d. Signal-driven (📡) items never count as overdue. Used in the resume brief if overdue > 0.
 
 ## 3. Find the active task
 
@@ -86,6 +87,9 @@ Then load the appropriate working context:
 
 <!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
+
+<!-- Include the next line ONLY if recurring.md has overdue items. Omit it entirely otherwise. -->
+**Recurring**: <N> overdue — run `/ds-work-recurring` to review.
 ```
 
 **Lite mode** — shorter brief, no sub-state, no scope context, no now.md:
@@ -104,6 +108,9 @@ Then load the appropriate working context:
 
 <!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
+
+<!-- Include the next line ONLY if recurring.md has overdue items. Omit it entirely otherwise. -->
+**Recurring**: <N> overdue — run `/ds-work-recurring` to review.
 ```
 
 ## 6. Propose the next action

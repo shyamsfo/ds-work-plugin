@@ -12,7 +12,7 @@ Parse `$ARGUMENTS`. The first token may be `--lite` or `--full`. Everything afte
 There are two modes for scaffolded projects:
 
 - **full** — complete document stack: vision, roadmap, milestones, now, design/, reviews/, market-research/, etc. Use when the project has a real product story, multiple milestones with design decisions to capture, or external stakeholders to communicate with.
-- **lite** — stripped-down stack: just milestones, backlog, parking-lot, reports, and how-to extensions. No vision, no roadmap, no now.md, no per-milestone PRDs/PLANs. Use for simple projects with a clear execution path that don't need product-level framing or design records. `milestones.md` doubles as *the* plan.
+- **lite** — stripped-down stack: just milestones, backlog, parking-lot, recurring, reports, and how-to extensions. No vision, no roadmap, no now.md, no per-milestone PRDs/PLANs. Use for simple projects with a clear execution path that don't need product-level framing or design records. `milestones.md` doubles as *the* plan.
 
 ### Step 0a — Pick mode (interactive)
 
@@ -57,6 +57,7 @@ product/
 ├── now.md                        # session pointer (placeholder)
 ├── backlog.md                    # low-commitment mind-dump (placeholder)
 ├── parking-lot.md                # unscheduled work items (placeholder)
+├── recurring.md                  # recurring-maintenance list (placeholder)
 ├── project-management-principles.md   # canonical PM reference (copied from scaffold)
 ├── design/                       # PRDs and PLANs per milestone (empty, ready to use)
 ├── reviews/                      # challenge reports (empty, ready to use)
@@ -82,6 +83,7 @@ product/
 ├── milestones.md                 # ALL milestones live here — sections per milestone, each with goal + task checklist. Doubles as the plan.
 ├── backlog.md                    # low-commitment mind-dump (placeholder)
 ├── parking-lot.md                # unscheduled work items (placeholder)
+├── recurring.md                  # recurring-maintenance list (placeholder)
 ├── project-management-principles.md   # canonical PM reference (copied from scaffold, lite variant)
 ├── research/                     # pre-decision options analyses and deep dives (empty)
 │   └── spikes/                   # time-boxed feasibility investigations
@@ -120,6 +122,7 @@ Single line, no trailing content. This is the first file to create — every sub
 - Step 5 (milestones.md) — use the **lite variant** template described in Step 5.
 - Step 5a (parking-lot.md)
 - Step 5b (backlog.md)
+- Step 5c (recurring.md)
 - Step 6 (how-to/ds-work-continue.md)
 - Step 7 (how-to/ds-work-halt.md)
 - Step 8 (how-to/ds-work-update.md)
@@ -432,6 +435,33 @@ One item per line. Date prefix optional but useful: `- YYYY-MM-DD — <thought>`
 <!-- append at bottom; format: - YYYY-MM-DD — <thought> -->
 ```
 
+### 5c. Create product/recurring.md
+
+```markdown
+# Recurring Maintenance
+
+Tasks that need periodic attention. Not milestones (no exit criteria), not parking-lot (never move to Done), not backlog (don't graduate). Just things that decay.
+
+Managed by `/ds-work-recurring`. `/ds-work-status` and `/ds-work-continue` surface overdue counts; `/ds-work-halt` asks whether any recurring items were completed this session.
+
+## Cadence key
+
+- 🕐 weekly (7 days)
+- 🕐🕐 monthly (30 days)
+- 🕐🕐🕐 quarterly (90 days)
+- 📡 signal-driven (triggered by an external event; never "overdue" by time)
+
+Every item must have a cadence marker, a title, a pointer (where the how-to lives), and a "Last run" field. Items without pointers rot; the pointer is what future-you consults when the item comes due.
+
+## Open
+
+<!-- newest first; format: - <cadence marker> **<title>** — <pointer sentence>. Last run: <YYYY-MM-DD or never>. -->
+
+## Done / History (last 10)
+
+<!-- newest first; auto-trimmed to 10; format: - YYYY-MM-DD — <title>: <summary> -->
+```
+
 ### 6. Create product/how-to/ds-work-continue.md
 
 ```markdown
@@ -576,6 +606,7 @@ product/milestones.md        ← progress tracker (story checkboxes, milestone s
 product/now.md               ← session pointer (what I'm doing right now)
 product/backlog.md           ← low-commitment mind-dump (no priority, no tags)
 product/parking-lot.md       ← unscheduled work items (bugs, chores, ideas captured for later)
+product/recurring.md         ← recurring-maintenance list (tasks that decay and need periodic touching)
 product/design/M{N}-PRD.md   ← milestone spec (what to build, scope, success criteria)
 product/design/M{N}-PLAN.md  ← milestone execution checklist (sub-task checkboxes)
 product/reviews/             ← challenge reports (adversarial reviews of planning artifacts)
@@ -644,6 +675,16 @@ Each item is one line: `- YYYY-MM-DD — <thought>` (date optional but useful).
 Managed by `/ds-work-backlog` — show the list (no ranking, no suggestions), add items (`/ds-work-backlog add <text>`), or `sweep` periodically to walk each item and decide: **promote** to parking-lot, **fold** into a PRD's Out-of-scope, or **delete** (silently — the backlog is intentionally lossy).
 
 The capture ladder: `backlog.md` → `parking-lot.md` → `design/M{N}-PLAN.md`. Items graduate upward; they don't have to.
+
+### `product/recurring.md` — The Recurring-Maintenance List
+
+Tasks that need periodic attention but have no terminal Definition of Done. A pricing table goes stale monthly; a dependency pin needs re-validating quarterly; a snapshot doc drifts in weeks. These aren't milestones (no exit criteria), aren't parking-lot items (they never move to Done), and aren't backlog (they don't graduate).
+
+Each item has a cadence marker (🕐 weekly / 🕐🕐 monthly / 🕐🕐🕐 quarterly / 📡 signal-driven), a title, a pointer to where the how-to lives, and a "Last run" date. Overdue = `today − last_run > cadence_days`; signal-driven items are never counted as overdue (they exist for discoverability).
+
+Managed by `/ds-work-recurring` — show overdue + upcoming (`/ds-work-recurring`), add new items (`/ds-work-recurring add <text>`), mark completed items done to update last-run (`/ds-work-recurring done <match>`), or sweep to keep/adjust/drop stale entries (`/ds-work-recurring sweep`). `/ds-work-status` and `/ds-work-continue` surface overdue counts; `/ds-work-halt` asks whether any recurring items were completed this session.
+
+If an item will complete exactly once and then be done, it belongs in `parking-lot.md`, not `recurring.md`.
 
 ### `product/now.md` — The Session Pointer
 
@@ -812,6 +853,7 @@ Nothing is duplicated. Each document answers exactly one question.
 | What am I doing right now? | `now.md` |
 | What half-formed thought do I want to remember? | `backlog.md` |
 | What's parked for later (not yet scheduled)? | `parking-lot.md` |
+| What needs periodic re-touching (refresh, sweep, re-validate)? | `recurring.md` |
 | What exactly does milestone N require? | `product/design/M{N}-PRD.md` |
 | What's the execution checklist for milestone N? | `product/design/M{N}-PLAN.md` |
 | Which concerns were raised against a planning artifact? | `product/reviews/<target>-challenge-YYYY-MM-DD.md` |
@@ -866,7 +908,7 @@ In lite mode, write this shorter version instead. It explains the smaller stack 
 ```markdown
 # Project Management Principles — Lite Mode
 
-This is a **lite-mode** project. It uses a stripped-down version of the `ds-work-*` system: just milestones, backlog, parking-lot, and session reports. Use it when the work has a clear execution path and doesn't need product-level framing or per-milestone design records.
+This is a **lite-mode** project. It uses a stripped-down version of the `ds-work-*` system: just milestones, backlog, parking-lot, recurring, and session reports. Use it when the work has a clear execution path and doesn't need product-level framing or per-milestone design records.
 
 For the full command reference, run **`/ds-work-user-guide`**.
 
@@ -882,6 +924,7 @@ product/
 ├── milestones.md               ← all milestones in one file. Sections per milestone with goal + task checklist. **This file IS the plan.**
 ├── backlog.md                  ← low-commitment mind-dump (no priority, no tags)
 ├── parking-lot.md              ← unscheduled work items (bugs, chores, ideas captured for later)
+├── recurring.md                ← recurring-maintenance list (tasks that decay and need periodic touching)
 ├── project-management-principles.md   ← this file
 ├── research/                   ← pre-decision options analyses (ds-work-research)
 │   └── spikes/                 ← time-boxed feasibility investigations (ds-work-spike)
@@ -917,6 +960,10 @@ Capture half-formed thoughts. No priority. Append-only. Managed by `/ds-work-bac
 
 Items that are worth tackling eventually but aren't in the active milestone. Tagged. Managed by `/ds-work-parking-lot`. In lite mode, `promote` adds the item to the active milestone's task list in `milestones.md` (not to a PLAN file, since none exists).
 
+### `recurring.md` — recurring-maintenance list (unchanged from full mode)
+
+Tasks that decay and need periodic touching (refresh a snapshot, sweep a directory, re-validate a pin). Cadence marker + pointer + last-run field per item. Managed by `/ds-work-recurring`. `/ds-work-status` and `/ds-work-continue` surface overdue counts; `/ds-work-halt` asks about done items each session.
+
 ### `reports/` — session history (unchanged from full mode)
 
 One file per day, written by `/ds-work-update` (mid-session) and `/ds-work-halt` (session end).
@@ -933,6 +980,7 @@ One file per day, written by `/ds-work-update` (mid-session) and `/ds-work-halt`
 | `/ds-work-halt` | Tick `milestones.md`, write report, commit, push, run project-specific teardown. Does not touch a PLAN file because there isn't one. |
 | `/ds-work-backlog` | Unchanged from full mode |
 | `/ds-work-parking-lot` | Unchanged from full mode |
+| `/ds-work-recurring` | Unchanged from full mode |
 | `/ds-work-spike` | Unchanged from full mode |
 | `/ds-work-research` | Unchanged from full mode |
 | `/ds-work-graduate` | Promote this project to full mode |

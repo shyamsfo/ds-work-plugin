@@ -52,6 +52,18 @@ Also: if the user reports that a parking-lot item was completed or dropped this 
 
 If the user skips, move on silently.
 
+## 2b. Sweep for recurring items
+
+Skip this step if `<dir>/recurring.md` does not exist.
+
+Ask the user a single, skippable question: *"Did any recurring items get done this session? (one line per completed item, or skip)"*
+
+For each item the user names, follow the `/ds-work-recurring done <match>` flow — update the item's "Last run:" field to today's date and append a one-liner to `## Done / History (last 10)` (trim tail to 10).
+
+Also: if the user surfaced a new recurring task worth tracking (not a one-off — something that will need periodic re-touching), offer to add it via `/ds-work-recurring add`. Do not auto-infer a cadence; ask.
+
+If the user skips, move on silently.
+
 ## 3. Update milestones.md and the active PLAN
 
 Go through the active milestone task list in `milestones.md`. For each task completed this session, change `[ ]` to `[x]`. For any task in progress but not done, use `[~]`. Be conservative — only check off tasks that are verifiably complete.
@@ -103,6 +115,10 @@ If the file already exists, append a new section. **Full mode** uses the sub-sta
 <!-- Include this section ONLY if any items were added/completed/dropped in parking-lot.md this session. Omit otherwise. -->
 - <item title> — <added | completed | dropped> *(reason if dropped)*
 
+### Recurring
+<!-- Include this section ONLY if any recurring items were completed or added this session. Omit otherwise. -->
+- <item title> — <marked done | added (<cadence>)>
+
 ### Next session starts at
 <next unchecked PLAN item, or first unchecked task from milestones.md if no PLAN exists>
 ```
@@ -120,6 +136,7 @@ Stage all modified files:
 - `<dir>/milestones.md`
 - `<dir>/design/M{N}-PLAN.md` *(full mode only, if PLAN checkboxes were ticked this session)*
 - `<dir>/parking-lot.md` (if parking-lot was modified this session)
+- `<dir>/recurring.md` (if recurring items were marked done or added this session)
 - `<dir>/reports/YYYY-MM-DD.md`
 - Any other modified tracked files surfaced by git status
 - New untracked files that are clearly intentional (reports, design docs, config files)

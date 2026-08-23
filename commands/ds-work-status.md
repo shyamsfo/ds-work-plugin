@@ -54,6 +54,8 @@ Branch the steps below by mode.
 
 6. If `<dir>/parking-lot.md` exists, count items under `## Open`. Note the count (only surfaced in output if > 0).
 
+7. If `<dir>/recurring.md` exists, count items under `## Open` and compute how many are **overdue** (today − last_run > cadence_days, or "Last run: never"). Cadence intervals: 🕐 = 7d, 🕐🕐 = 30d, 🕐🕐🕐 = 90d. Signal-driven (📡) items never count as overdue. Note the count (only surfaced in output if overdue > 0).
+
 7. Output a short, scannable answer.
 
 **Full mode**:
@@ -79,6 +81,9 @@ Branch the steps below by mode.
 
 <!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
+
+<!-- Include the next line ONLY if recurring.md has overdue items. Omit it entirely otherwise. -->
+**Recurring**: <N> overdue — run `/ds-work-recurring` to review.
 ```
 
 **Lite mode** — even tighter, no sub-state, no PRD context:
@@ -101,6 +106,9 @@ Branch the steps below by mode.
 
 <!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
+
+<!-- Include the next line ONLY if recurring.md has overdue items. Omit it entirely otherwise. -->
+**Recurring**: <N> overdue — run `/ds-work-recurring` to review.
 ```
 
 Keep it tight. No need to summarise every milestone — just tell the user what to do right now and why.
