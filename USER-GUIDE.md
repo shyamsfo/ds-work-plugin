@@ -21,7 +21,7 @@ Every scaffolded project picks one of two modes, recorded in `product/ds-work-mo
 | **full** | `vision.md` + `roadmap.md` + `now.md` + `milestones.md` + `design/` (PRDs + PLANs per milestone) + `reviews/` + `market-research/` + the usual extras | Real product story, multiple milestones with design decisions, external stakeholders, or anything you'll need to communicate outward. |
 | **lite** | `milestones.md` (all milestones in one file with a flat task checklist — *this file is the plan*) + `backlog.md` + `parking-lot.md` + `reports/` + lighter `how-to/` | Clear execution path, no real product framing needed. No vision/roadmap/PRDs to maintain. |
 
-Every command branches on the mode marker. Commands that produce full-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-challenge`) detect lite mode and offer to graduate before doing anything.
+Every command branches on the mode marker. Commands that produce full-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-ideal-customer-profile`, `/ds-work-challenge`) detect lite mode and offer to graduate before doing anything.
 
 Promote a lite project to full at any time with `/ds-work-graduate`. Graduation is one-way and additive — existing files are preserved, full-mode artifacts are added alongside.
 
@@ -39,6 +39,7 @@ Promote a lite project to full at any time with `/ds-work-graduate`. Graduation 
 | Which concerns were raised against a planning artifact? | `reviews/<target>-challenge-YYYY-MM-DD.md` |
 | What happened last Tuesday? | `reports/YYYY-MM-DD.md` |
 | How do I explain this project in one page? | `one-pager.md` |
+| Who is our ideal customer, in specific terms? | `gtm/ideal-customer-profile.md` |
 
 ---
 
@@ -111,6 +112,7 @@ Run every session, in order.
 |---------|---------|
 | `/ds-work-one-pager [dir]` | Create or refresh `one-pager.md` (~500 words). |
 | `/ds-work-elevator-pitch [dir]` | Generate 3 pitch variants (tweet, 30-second verbal, 60-second investor). |
+| `/ds-work-ideal-customer-profile [dir]` | Interactively develop an Ideal Customer Profile — firmographics, technographics, AI journey stage, buyer/user, triggers, PMF signals, disqualifiers. Writes to `gtm/ideal-customer-profile.md`. |
 
 ### Reference
 | Command | Purpose |
@@ -269,6 +271,7 @@ After committing and pushing, also:
 ```
 /ds-work-one-pager
 /ds-work-elevator-pitch
+/ds-work-ideal-customer-profile   # once, then refresh as prospects reshape the picture
 ```
 
 ---

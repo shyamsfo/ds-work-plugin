@@ -1,6 +1,6 @@
 # ds-work
 
-A Claude Code plugin that adds 18 lightweight project-management slash commands — vision, roadmap, milestones, session lifecycle, parking lot, backlog, recurring maintenance, and review — for managing software projects end-to-end.
+A Claude Code plugin that adds 19 lightweight project-management slash commands — vision, roadmap, milestones, session lifecycle, parking lot, backlog, recurring maintenance, and review — for managing software projects end-to-end.
 
 All commands are prefixed with `/ds-work-`.
 
@@ -11,7 +11,7 @@ All commands are prefixed with `/ds-work-`.
 - **full** — the complete stack: `vision.md`, `roadmap.md`, `now.md`, per-milestone PRDs + PLANs, design reviews, market research. Best when there's a real product story, multiple milestones with design decisions to capture, or external stakeholders.
 - **lite** — a stripped-down stack: just `milestones.md` (all milestones in one file with a flat task checklist — *this file is the plan*), `backlog.md`, `parking-lot.md`, and `reports/`. No vision, no roadmap, no now.md, no PRDs. Best for simple projects with a clear execution path.
 
-The chosen mode is recorded in `product/ds-work-mode.txt`. Every other command reads that file and branches its behavior. Commands that target full-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-challenge`) detect lite mode and offer to graduate before doing anything.
+The chosen mode is recorded in `product/ds-work-mode.txt`. Every other command reads that file and branches its behavior. Commands that target full-only artifacts (`/ds-work-vision`, `/ds-work-roadmap`, `/ds-work-plan`, `/ds-work-one-pager`, `/ds-work-elevator-pitch`, `/ds-work-ideal-customer-profile`, `/ds-work-challenge`) detect lite mode and offer to graduate before doing anything.
 
 Pass `--lite` or `--full` to `/ds-work-scaffold` to skip the prompt. Promote a lite project to full at any time with `/ds-work-graduate` — it's one-way and additive (existing files preserved, full-mode artifacts added alongside).
 
@@ -65,6 +65,7 @@ The rest of this README is the short version.
 ### Communication
 - `/ds-work-one-pager [dir]` — generate `one-pager.md` *(full mode only)*
 - `/ds-work-elevator-pitch [dir]` — generate pitch variants *(full mode only)*
+- `/ds-work-ideal-customer-profile [dir]` — interactively develop an ICP (`gtm/ideal-customer-profile.md`) *(full mode only)*
 
 ### Reference
 - `/ds-work-user-guide` — full inline user guide
