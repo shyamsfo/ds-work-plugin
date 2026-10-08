@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ds-work — project management as slash commands for Claude Code</title>
+  <meta name="description" content="A Claude Code plugin that adds 20 lightweight slash commands for managing software projects end-to-end: vision, roadmap, milestones, session lifecycle, parking lot, backlog, and review." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand">
+        <span class="brand-mark">/</span>
+        <span class="brand-name">ds-work</span>
+      </a>
+      <nav class="site-nav">
+        <a href="#why">Why</a>
+        <a href="#commands">Commands</a>
+        <a href="#stack">Stack</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/shyamsfo/ds-work-plugin" class="nav-github" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme" title="Toggle light/dark mode">
+        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">Claude Code plugin · v0.4.0 · MIT</div>
+        <h1 class="hero-title">
+          Project management<br />
+          <span class="accent">as slash commands.</span>
+        </h1>
+        <p class="hero-subtitle">
+          <strong>ds-work</strong> adds 20 lightweight commands to Claude Code — vision, roadmap, milestones, session lifecycle, parking lot, backlog, review. One question, one document. Zero boilerplate.
+        </p>
+        <div class="hero-cta">
+          <a href="#install" class="btn btn-primary">Get started</a>
+          <a href="#commands" class="btn btn-secondary">See the commands</a>
+        </div>
+        <div class="hero-terminal" aria-hidden="true">
+          <div class="terminal-chrome">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span class="terminal-title">claude code</span>
+          </div>
+          <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-continue</span>
+
+<span class="muted">Reading product/now.md…</span>
+<span class="muted">Active milestone: <b>M2 — streaming ingest</b></span>
+<span class="muted">Sub-state: executing (4 / 11 tasks complete)</span>
+
+<span class="ok">Next task:</span> wire backpressure signal into the kafka consumer
+<span class="ok">File:</span> src/ingest/consumer.go:142
+
+<span class="prompt">&gt;</span> <span class="cmd">/ds-work-halt</span>
+
+<span class="muted">Updating milestones.md…</span>
+<span class="muted">Writing reports/2026-10-08.md…</span>
+<span class="muted">Scaling GPU pool to 0 (how-to/ds-work-halt.md)…</span>
+<span class="ok">✓ Session wrapped. Pushed to origin/main.</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="why" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">The problem</div>
+          <h2>Projects die in the gap between sessions.</h2>
+        </div>
+        <div class="two-col">
+          <div class="col">
+            <h3>Without a system</h3>
+            <ul class="list-x">
+              <li>You spend 20 minutes rebuilding context every morning.</li>
+              <li>Half-finished thoughts live in Slack DMs and never resurface.</li>
+              <li>The "why" of an old decision is lost by sprint three.</li>
+              <li>Your cloud infra keeps burning money because you forgot to shut it down.</li>
+              <li>Every project reinvents its own ad-hoc PM structure.</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3>With ds-work</h3>
+            <ul class="list-check">
+              <li><code>/ds-work-continue</code> rebuilds context in one command.</li>
+              <li><code>/ds-work-backlog add</code> captures the thought in two seconds.</li>
+              <li>Decisions live in a Decision Log at the bottom of the doc that owns them.</li>
+              <li><code>/ds-work-halt</code> runs project-specific teardown — scale nodes to zero, stop Postgres, commit, push.</li>
+              <li>Every project uses the same mental model: <em>one question, one document.</em></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Two modes</div>
+          <h2>Start lite. Graduate when you need to.</h2>
+          <p class="section-lead">
+            Not every project needs a vision document. Pick the shape that fits — the plugin behaves differently in each mode.
+          </p>
+        </div>
+        <div class="modes">
+          <article class="mode-card">
+            <div class="mode-badge">lite</div>
+            <h3>For scripts, tools, and clear execution paths</h3>
+            <p>A stripped-down stack: <code>milestones.md</code> is the plan. No vision, no roadmap, no PRDs. Four files total.</p>
+            <ul class="mode-files">
+              <li><code>milestones.md</code> — all milestones + tasks in one file</li>
+              <li><code>parking-lot.md</code> — unscheduled work</li>
+              <li><code>backlog.md</code> — mind-dump</li>
+              <li><code>recurring.md</code> — tasks that decay</li>
+            </ul>
+          </article>
+          <article class="mode-card mode-card-accent">
+            <div class="mode-badge">full</div>
+            <h3>For real products with stakeholders</h3>
+            <p>The complete stack: vision, roadmap, per-milestone PRDs and PLANs, challenge reviews, market research, communications artifacts.</p>
+            <ul class="mode-files">
+              <li>Everything in lite, plus:</li>
+              <li><code>vision.md</code>, <code>roadmap.md</code>, <code>now.md</code></li>
+              <li><code>design/M{N}-PRD.md</code> + <code>M{N}-PLAN.md</code></li>
+              <li><code>reviews/</code> — adversarial challenge reports</li>
+              <li><code>one-pager.md</code>, <code>elevator-pitch.md</code>, ICP</li>
+            </ul>
+          </article>
+        </div>
+        <p class="section-footnote">
+          Promote with <code>/ds-work-graduate</code> — one-way, additive, existing files preserved.
+        </p>
+      </div>
+    </section>
+
+    <section id="commands" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">The command map</div>
+          <h2>20 commands, four phases.</h2>
+          <p class="section-lead">
+            Setup → Plan → Work → Review. Every command reads existing state and does the smallest useful thing.
+          </p>
+        </div>
+
+        <div class="phase">
+          <h3 class="phase-title"><span class="phase-num">01</span> Setup</h3>
+          <div class="cmd-grid">
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-scaffold</code>
+              <p>Bootstrap <code>product/</code> with placeholder docs. Asks lite or full mode.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-graduate</code>
+              <p>Promote a lite-mode project to full. Additive, one-way.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-vision</code>
+              <p>Interactively write or review <code>vision.md</code>. <span class="pill">full</span></p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-roadmap</code>
+              <p>Interactively write or review <code>roadmap.md</code>. <span class="pill">full</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3 class="phase-title"><span class="phase-num">02</span> Milestone planning</h3>
+          <div class="cmd-grid">
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-plan</code>
+              <p>State-driven: writes <code>M{N}-PRD.md</code> and <code>M{N}-PLAN.md</code>, or runs a drift review if both exist. <span class="pill">full</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3 class="phase-title"><span class="phase-num">03</span> Session lifecycle</h3>
+          <div class="cmd-grid">
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-continue</code>
+              <p>Start of session. Resume brief: active milestone, sub-state, next task.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-status</code>
+              <p>Mid-session. The next concrete action — shorter than continue.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-update</code>
+              <p>Checkpoint snapshot appended to today's session report.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-halt</code>
+              <p>End of session. Updates docs, commits, pushes, runs project-specific teardown.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-parking-lot</code>
+              <p>Manage unscheduled items. <code>add</code>, <code>pick</code>, filter by tag.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-backlog</code>
+              <p>Low-commitment mind-dump. One rung below parking lot.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-recurring</code>
+              <p>Tasks that decay — refresh a snapshot, re-validate a pin, sweep a dir.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3 class="phase-title"><span class="phase-num">04</span> Review, research, communication</h3>
+          <div class="cmd-grid">
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-challenge</code>
+              <p>Adversarial pressure-test of a planning artifact. <span class="pill">full</span></p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-research</code>
+              <p>Structured market, competitive, or technology deep-dives.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-spike</code>
+              <p>Time-boxed technical spike with a single yes/no question.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-one-pager</code>
+              <p>Generate <code>one-pager.md</code> (~500 words). <span class="pill">full</span></p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-elevator-pitch</code>
+              <p>Three pitch variants: tweet, 30s verbal, 60s investor. <span class="pill">full</span></p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-ideal-customer-profile</code>
+              <p>Interactively develop an ICP — firmographics, triggers, PMF signals. <span class="pill">full</span></p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-user-guide</code>
+              <p>Print the full guide inline, optionally save a copy into your project.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="stack" class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Mental model</div>
+          <h2>One question, one document.</h2>
+          <p class="section-lead">
+            The moment the same content lives in two places, they drift. Every stable question gets exactly one home under <code>product/</code>.
+          </p>
+        </div>
+        <div class="qa-table">
+          <div class="qa-row"><div class="qa-q">Why are we building this? Who is it for?</div><div class="qa-a"><code>vision.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What are we building and how?</div><div class="qa-a"><code>roadmap.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">Which milestone am I in? What's done?</div><div class="qa-a"><code>milestones.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What am I working on right now?</div><div class="qa-a"><code>now.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What's parked for later?</div><div class="qa-a"><code>parking-lot.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What half-formed thought do I want to remember?</div><div class="qa-a"><code>backlog.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What needs periodic re-touching?</div><div class="qa-a"><code>recurring.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What exactly does milestone N require?</div><div class="qa-a"><code>design/M{N}-PRD.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What's the execution checklist for milestone N?</div><div class="qa-a"><code>design/M{N}-PLAN.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What concerns were raised against this plan?</div><div class="qa-a"><code>reviews/&lt;target&gt;-challenge-YYYY-MM-DD.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">What happened last Tuesday?</div><div class="qa-a"><code>reports/YYYY-MM-DD.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">How do I explain this project in one page?</div><div class="qa-a"><code>one-pager.md</code></div></div>
+          <div class="qa-row"><div class="qa-q">Who is our ideal customer?</div><div class="qa-a"><code>gtm/ideal-customer-profile.md</code></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Customize without forking</div>
+          <h2>Project-specific extensions via <code>how-to/</code>.</h2>
+          <p class="section-lead">
+            Drop a file at <code>product/how-to/ds-work-&lt;command&gt;.md</code> and that command folds in your steps. The generic behavior stays in the plugin.
+          </p>
+        </div>
+        <div class="howto-example">
+          <div class="howto-caption">Example: shut down cloud infra every time you halt a session.</div>
+          <pre class="code-block"><span class="code-comment"># product/how-to/ds-work-halt.md</span>
+
+After committing and pushing, also:
+
+1. Scale GPU pool to 0:
+   <span class="code-str">`kubectl scale --replicas=0 deployment/inference -n prod`</span>
+2. Stop Postgres:
+   <span class="code-str">`gcloud sql instances patch my-db --activation-policy=NEVER`</span>
+3. Stop local docker:
+   <span class="code-str">`docker compose -f infra/local/docker-compose.yml stop`</span>
+4. Confirm everything is down, then report.</pre>
+          <p class="howto-footer">Next time you run <code>/ds-work-halt</code>, Claude reads this file and runs those steps as part of shutdown. You don't even need to write the file by hand — just ask Claude to customize the command for your project.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="section section-cta">
+      <div class="container">
+        <div class="section-head center">
+          <div class="eyebrow">Install</div>
+          <h2>Two commands in Claude Code.</h2>
+          <p class="section-lead">The slash commands become available immediately, in every project you open.</p>
+        </div>
+        <pre class="install-block"><span class="prompt">&gt;</span> /plugin marketplace add shyamsfo/ds-work-plugin
+<span class="prompt">&gt;</span> /plugin install ds-work@ds-work-plugin</pre>
+        <div class="cta-row">
+          <a href="https://github.com/shyamsfo/ds-work-plugin" class="btn btn-primary" target="_blank" rel="noopener">View on GitHub</a>
+          <a href="https://github.com/shyamsfo/ds-work-plugin/blob/main/USER-GUIDE.md" class="btn btn-secondary" target="_blank" rel="noopener">Read the user guide</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark">/</span>
+        <span class="brand-name">ds-work</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/shyamsfo/ds-work-plugin" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/shyamsfo/ds-work-plugin/blob/main/USER-GUIDE.md" target="_blank" rel="noopener">User Guide</a>
+        <a href="https://github.com/shyamsfo/ds-work-plugin/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+      <div class="footer-meta">A Claude Code plugin · built for developers who ship.</div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
