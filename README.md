@@ -4,6 +4,8 @@ A Claude Code plugin that adds 19 lightweight project-management slash commands 
 
 All commands are prefixed with `/ds-work-`.
 
+**Landing page:** https://shyamsfo.github.io/ds-work-plugin/
+
 ## Two modes: full or lite
 
 `/ds-work-scaffold` asks which mode you want before doing anything:
