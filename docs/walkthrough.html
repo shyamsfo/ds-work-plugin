@@ -80,6 +80,7 @@
             <li><a href="#step-9">Stay oriented mid-flow</a></li>
             <li><a href="#step-10">Finish the last milestone</a></li>
           </ol>
+          <a href="#map" class="walk-toc-aside">+ The full command map (what you'll use, what you won't) →</a>
         </div>
       </div>
     </section>
@@ -475,6 +476,177 @@ If the next phase involves real users or stakeholders, consider /ds-work-graduat
 to add vision.md, roadmap.md, and per-milestone PRDs.</span></pre>
           </div>
         </article>
+
+        <!-- COMMAND MAP -->
+        <section class="walk-map" id="map">
+          <h2 class="walk-map-title">The full command map.</h2>
+          <p class="walk-map-lead">
+            linkjar exercised six of the nineteen commands. Here's where they fit, and what the other thirteen do — including the ones that only make sense once you've graduated to full mode.
+          </p>
+
+          <div class="walk-map-legend">
+            <span><span class="walk-map-tick done">✓</span> used in this walkthrough</span>
+            <span><span class="walk-map-tick todo">○</span> for the day you need it</span>
+            <span><span class="walk-map-tag">full mode</span> only available after <code>/ds-work-graduate</code></span>
+          </div>
+
+          <div class="walk-map-phase">
+            <h3 class="walk-map-phase-title"><span class="walk-map-phase-num">01</span> Setup</h3>
+            <ul class="walk-map-list">
+              <li class="walk-map-item done">
+                <span class="walk-map-tick done">✓</span>
+                <div>
+                  <code>/ds-work-scaffold</code>
+                  <p>Step 2 — picked lite mode, created <code>product/</code>.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-graduate</code>
+                  <p>One-way promotion from lite to full. You'd run this if linkjar grew real stakeholders or wanted per-milestone PRDs. Adds <code>vision.md</code>, <code>roadmap.md</code>, <code>now.md</code>, <code>design/</code>, <code>reviews/</code> alongside existing lite files — nothing is overwritten.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-vision</code> <span class="walk-map-tag">full mode</span>
+                  <p>Interactive write/review of <code>vision.md</code> — the problem, the customer, the north star. Lite mode skips this entirely; the problem lives in your head and in <code>milestones.md</code>.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-roadmap</code> <span class="walk-map-tag">full mode</span>
+                  <p>Interactive write/review of <code>roadmap.md</code> — the architecture and the sequence of milestones that gets you to the vision. Updates in place when milestones are completed or reshuffled.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="walk-map-phase">
+            <h3 class="walk-map-phase-title"><span class="walk-map-phase-num">02</span> Milestone planning</h3>
+            <ul class="walk-map-list">
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-plan</code> <span class="walk-map-tag">full mode</span>
+                  <p>Writes <code>M{N}-PRD.md</code> (spec) and <code>M{N}-PLAN.md</code> (sub-task checklist) for the active milestone. State-driven: knows whether to create, resume mid-draft, or close out when all boxes are ticked. Lite mode doesn't need it — milestones are flat task lists in <code>milestones.md</code>, so the task <em>is</em> the plan.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="walk-map-phase">
+            <h3 class="walk-map-phase-title"><span class="walk-map-phase-num">03</span> Session lifecycle</h3>
+            <ul class="walk-map-list">
+              <li class="walk-map-item done">
+                <span class="walk-map-tick done">✓</span>
+                <div>
+                  <code>/ds-work-continue</code>
+                  <p>Steps 4 and 8 — the morning ignition. In full mode it also loads the active milestone's PRD + PLAN and reports a sub-state (<code>defined</code> / <code>drafting</code> / <code>planned</code> / <code>executing</code> / <code>complete</code>).</p>
+                </div>
+              </li>
+              <li class="walk-map-item done">
+                <span class="walk-map-tick done">✓</span>
+                <div>
+                  <code>/ds-work-status</code>
+                  <p>Step 9 — the mid-flow nudge. Shorter than <code>continue</code>; just the next action and how to verify it.</p>
+                </div>
+              </li>
+              <li class="walk-map-item done">
+                <span class="walk-map-tick done">✓</span>
+                <div>
+                  <code>/ds-work-update</code>
+                  <p>Step 5 — the checkpoint snapshot. No commit, no halt — just records progress + decisions into today's session report.</p>
+                </div>
+              </li>
+              <li class="walk-map-item done">
+                <span class="walk-map-tick done">✓</span>
+                <div>
+                  <code>/ds-work-halt</code>
+                  <p>Steps 7 and 10 — the end-of-session wrap. In full mode it also ticks PLAN items and advances the sub-state marker in addition to flipping the milestone tick.</p>
+                </div>
+              </li>
+              <li class="walk-map-item done">
+                <span class="walk-map-tick done">✓</span>
+                <div>
+                  <code>/ds-work-parking-lot</code>
+                  <p>Step 6 — one <code>add</code>. Also supports <code>pick</code> (Claude proposes 1–3 items worth promoting into the active milestone) and filtering by tag.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-backlog</code>
+                  <p>A rung below the parking-lot. Half-formed thoughts that may or may not ever deserve work. <code>/ds-work-backlog sweep</code> periodically triages the list — promote, drop, or defer. The escape valve for "I don't want to think about whether this matters yet."</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-recurring</code>
+                  <p>Tasks that decay — refresh a snapshot every 30 days, re-validate a pinned version every 90 days, sweep a directory every week. Overdue items surface in <code>/ds-work-continue</code>'s resume brief so you don't forget them.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="walk-map-phase">
+            <h3 class="walk-map-phase-title"><span class="walk-map-phase-num">04</span> Review, research, communication</h3>
+            <ul class="walk-map-list">
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-challenge</code> <span class="walk-map-tag">full mode</span>
+                  <p>Adversarial pressure-test of a planning artifact (vision, roadmap, PRD, or PLAN). Writes a Challenge Report to <code>reviews/</code> without modifying the source. For when you want a second opinion before committing to a direction.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-research</code>
+                  <p>Structured market, competitive, or technology deep-dive. Guides the investigation interactively and writes findings to <code>research/</code>. Works in both modes.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-spike</code>
+                  <p>Time-boxed technical spike with a single yes/no feasibility question. Writes to <code>research/spikes/</code>. Use when you're not sure whether an approach will work and want a bounded investigation before committing.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-one-pager</code> <span class="walk-map-tag">full mode</span>
+                  <p>Synthesizes vision + roadmap + milestones into a crisp ~500-word <code>one-pager.md</code>. Iterates with you until it's sharp. Lite mode has no vision/roadmap to synthesize from.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-elevator-pitch</code> <span class="walk-map-tag">full mode</span>
+                  <p>Three pitch variants at different lengths: tweet, 30-second verbal, 60-second investor. Iterates until sharp.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-ideal-customer-profile</code> <span class="walk-map-tag">full mode</span>
+                  <p>Interactive ICP: firmographics, technographics, AI-journey stage, buyer/user roles, trigger events, PMF signals, disqualifiers. Writes to <code>gtm/ideal-customer-profile.md</code>.</p>
+                </div>
+              </li>
+              <li class="walk-map-item">
+                <span class="walk-map-tick todo">○</span>
+                <div>
+                  <code>/ds-work-user-guide</code>
+                  <p>Prints the full user guide inline inside Claude, and optionally saves a copy into your project.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
 
         <!-- CLOSE -->
         <article class="walk-close">
