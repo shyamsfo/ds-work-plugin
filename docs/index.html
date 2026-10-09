@@ -31,7 +31,7 @@
       <nav class="site-nav">
         <a href="#why">Why</a>
         <a href="#commands">Commands</a>
-        <a href="#stack">Stack</a>
+        <a href="walkthrough.html">Walkthrough</a>
         <a href="#install">Install</a>
         <a href="https://github.com/shyamsfo/ds-work-plugin" class="nav-github" target="_blank" rel="noopener">GitHub</a>
       </nav>
@@ -91,6 +91,45 @@
 <span class="muted">Writing reports/2026-10-08.md…</span>
 <span class="muted">Scaling GPU pool to 0 (how-to/ds-work-halt.md)…</span>
 <span class="ok">✓ Session wrapped. Pushed to origin/main.</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-walk-teaser">
+      <div class="container">
+        <div class="walk-teaser">
+          <div class="walk-teaser-copy">
+            <div class="eyebrow">Walkthrough</div>
+            <h2>Watch it on a real project.</h2>
+            <p>
+              Ten steps, from empty directory to shipped milestones: scaffolding a FastAPI service called <strong>linkjar</strong>, feeding Claude a napkin brief, letting it propose milestones, and running the daily <code>continue</code> / <code>update</code> / <code>halt</code> loop. Every terminal block is what the plugin actually prints — no marketing fiction.
+            </p>
+            <a href="walkthrough.html" class="btn btn-primary">Read the walkthrough →</a>
+          </div>
+          <div class="walk-teaser-terminal" aria-hidden="true">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-scaffold</span>
+
+<span class="muted">Pick a mode: full / lite (default: full)</span>
+
+<span class="prompt">&gt;</span> lite
+
+<span class="muted">Creating product/ (lite mode)…</span>
+  <span class="ok">✓</span> product/milestones.md
+  <span class="ok">✓</span> product/parking-lot.md
+  <span class="ok">✓</span> product/reports/
+
+<span class="muted">Done. milestones.md is empty — seed it from idea.txt?</span>
+
+<span class="prompt">&gt;</span> yes
+
+<span class="muted">Reading idea.txt… proposing M1–M4…</span></pre>
+          </div>
         </div>
       </div>
     </section>

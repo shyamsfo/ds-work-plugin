@@ -5,6 +5,7 @@ A Claude Code plugin that adds 19 lightweight project-management slash commands 
 All commands are prefixed with `/ds-work-`.
 
 **Landing page:** https://shyamsfo.github.io/ds-work-plugin/
+**Walkthrough:**  https://shyamsfo.github.io/ds-work-plugin/walkthrough.html — ten steps, from empty directory to shipped milestones, on a real FastAPI project
 
 ## Two modes: full or lite
 
@@ -30,8 +31,9 @@ That's it. The slash commands become available immediately, in every project you
 
 ## Learn the system
 
-Two ways to read the guide:
+Three ways to see it:
 
+- **Walkthrough:** [docs/walkthrough.html](https://shyamsfo.github.io/ds-work-plugin/walkthrough.html) — watch it end-to-end on a tiny FastAPI project (`linkjar`) from empty directory to shipped milestones. Realistic command output, lite mode throughout.
 - **In Claude Code:** run `/ds-work-user-guide` — prints the full guide inline and optionally saves a copy into your current project.
 - **In this repo:** see [USER-GUIDE.md](./USER-GUIDE.md) — a condensed summary of the full guide.
 

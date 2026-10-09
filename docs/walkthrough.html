@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Walkthrough — building a FastAPI service with ds-work</title>
+  <meta name="description" content="A ten-step walkthrough: scaffolding a Python API with ds-work from empty directory to shipped milestones. Realistic command output, lite mode, no hand-waving." />
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('ds-work-theme');
+        var theme = (stored === 'light' || stored === 'dark')
+          ? stored
+          : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">/</span>
+        <span class="brand-name">ds-work</span>
+      </a>
+      <nav class="site-nav">
+        <a href="index.html#why">Why</a>
+        <a href="index.html#commands">Commands</a>
+        <a href="walkthrough.html" class="nav-active">Walkthrough</a>
+        <a href="index.html#install">Install</a>
+        <a href="https://github.com/shyamsfo/ds-work-plugin" class="nav-github" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme" title="Toggle light/dark mode">
+        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="walk-hero">
+      <div class="container">
+        <div class="hero-badge">Walkthrough · ~8 min read</div>
+        <h1 class="hero-title">
+          From empty directory<br />
+          <span class="accent">to shipped milestone.</span>
+        </h1>
+        <p class="hero-subtitle">
+          You'll build <strong>linkjar</strong>, a tiny bookmark API in Python/FastAPI, using <strong>ds-work</strong> end-to-end. Every terminal block below is what the plugin actually prints — no marketing fiction. Lite mode throughout.
+        </p>
+
+        <div class="walk-toc">
+          <div class="walk-toc-label">The ten steps</div>
+          <ol class="walk-toc-list">
+            <li><a href="#step-1">Start with an idea in a text file</a></li>
+            <li><a href="#step-2">Scaffold the project</a></li>
+            <li><a href="#step-3">Turn the idea into milestones</a></li>
+            <li><a href="#step-4">Resume into the first task</a></li>
+            <li><a href="#step-5">Checkpoint mid-flow</a></li>
+            <li><a href="#step-6">Park a drifting thought</a></li>
+            <li><a href="#step-7">Wrap the session cleanly</a></li>
+            <li><a href="#step-8">Come back the next day</a></li>
+            <li><a href="#step-9">Stay oriented mid-flow</a></li>
+            <li><a href="#step-10">Finish the last milestone</a></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section walk-section">
+      <div class="container">
+
+        <!-- STEP 1 -->
+        <article class="walk-step" id="step-1">
+          <div class="walk-step-head">
+            <span class="walk-step-num">01</span>
+            <h2 class="walk-step-title">Start with an idea in a text file.</h2>
+          </div>
+          <p class="walk-prose">
+            You've been meaning to build this for months — a tiny bookmark API, one process, something you'd actually use instead of the thirty tabs rotting in your browser. You start with a fresh directory and a napkin brief. No README, no plan — just enough to point Claude at.
+          </p>
+          <div class="walk-file-label">~/code/linkjar/idea.txt</div>
+          <pre class="code-block">linkjar: a bookmark API I actually want to use.
+
+- POST /bookmarks     save a URL with optional title + tags
+- GET  /bookmarks     list, filter by tag, search by text
+- DELETE /bookmarks/{id}
+
+- API-key auth, one user for now (me)
+- FastAPI + sqlite via SQLAlchemy
+- single process, no celery, no redis
+- deploy by running: uvicorn linkjar.main:app</pre>
+          <p class="walk-prose">Now open Claude Code in the empty directory.</p>
+          <pre class="code-block"><span class="code-comment">$</span> mkdir linkjar &amp;&amp; cd linkjar
+<span class="code-comment">$</span> $EDITOR idea.txt   <span class="code-comment"># paste the brief above</span>
+<span class="code-comment">$</span> claude</pre>
+        </article>
+
+        <!-- STEP 2 -->
+        <article class="walk-step" id="step-2">
+          <div class="walk-step-head">
+            <span class="walk-step-num">02</span>
+            <h2 class="walk-step-title">Scaffold the project.</h2>
+          </div>
+          <p class="walk-prose">
+            Run <code>/ds-work-scaffold</code>. It asks one question before touching anything.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-scaffold</span>
+
+<span class="muted">This will scaffold a new project. Pick a mode:
+
+  1. full — vision.md, roadmap.md, now.md, per-milestone PRDs + PLANs,
+            design reviews, market research. Best for projects with real
+            product framing or external stakeholders.
+
+  2. lite — milestones.md (with all milestones in one file), backlog.md,
+            parking-lot.md, recurring.md, reports/. No vision, no roadmap,
+            no PRDs. Best for projects with a clear execution path.
+
+Which mode? (full / lite, default: full)</span>
+
+<span class="prompt">&gt;</span> lite
+
+<span class="muted">Creating product/ (lite mode)…</span>
+  <span class="ok">✓</span> product/ds-work-mode.txt      <span class="muted">(contains: lite)</span>
+  <span class="ok">✓</span> product/milestones.md
+  <span class="ok">✓</span> product/backlog.md
+  <span class="ok">✓</span> product/parking-lot.md
+  <span class="ok">✓</span> product/recurring.md
+  <span class="ok">✓</span> product/how-to/
+  <span class="ok">✓</span> product/reports/
+  <span class="ok">✓</span> product/project-management-principles.md
+
+<span class="muted">Done. milestones.md is empty — want me to seed it from idea.txt?</span></pre>
+          </div>
+          <div class="walk-callout">
+            <div class="walk-callout-label">Why lite</div>
+            <p>
+              linkjar is a scope you can hold in your head: four features, one process, one developer. Lite mode skips vision/roadmap/PRDs — <code>milestones.md</code> <em>is</em> the plan. If this ever grows stakeholders or a billing system, <code>/ds-work-graduate</code> promotes to full mode without rewriting anything.
+            </p>
+          </div>
+        </article>
+
+        <!-- STEP 3 -->
+        <article class="walk-step" id="step-3">
+          <div class="walk-step-head">
+            <span class="walk-step-num">03</span>
+            <h2 class="walk-step-title">Turn the idea into milestones.</h2>
+          </div>
+          <p class="walk-prose">
+            Rather than hand-writing <code>milestones.md</code>, point Claude at <code>idea.txt</code> and let it propose a milestone breakdown. You push back where you disagree — this is a conversation, not a one-shot.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> yes — read idea.txt and propose milestones
+
+<span class="muted">Reading idea.txt…</span>
+
+<span class="muted">Proposed milestones:</span>
+
+<span class="ok">M1 — scaffold + health endpoint</span>
+   [ ] pyproject.toml with fastapi, sqlalchemy, uvicorn deps
+   [ ] src/linkjar/main.py: FastAPI app + GET /healthz
+   [ ] README quickstart: install + run instructions
+
+<span class="ok">M2 — CRUD bookmarks</span>
+   [ ] SQLAlchemy model: id, url, title, created_at
+   [ ] POST, GET (list + by id), DELETE /bookmarks
+   [ ] alembic migration for the bookmarks table
+   [ ] tests: 4 endpoint tests covering happy paths
+
+<span class="ok">M3 — API-key auth</span>
+   [ ] key in X-API-Key header, loaded from LINKJAR_API_KEY env
+   [ ] FastAPI dependency applied to all /bookmarks routes
+   [ ] /healthz stays public; everything else 401 without the key
+   [ ] tests: 401 without key, 200 with correct key
+
+<span class="ok">M4 — tags + search</span>
+   [ ] tags column (comma-joined for now)
+   [ ] GET /bookmarks?tag=x and ?q=foo (LIKE over title)
+   [ ] tests: filter by tag, search by text
+
+<span class="muted">Sound right? I'll write them into milestones.md and mark M1 🔄 in progress.</span>
+
+<span class="prompt">&gt;</span> yes
+
+<span class="muted">Wrote product/milestones.md. M1 is 🔄 in progress; M2–M4 are ⏳ queued.</span></pre>
+          </div>
+          <p class="walk-prose">
+            Four milestones, each with 3–4 small tasks. No fluff, no "research spike" phases, no "project setup" meta-tasks. Each task names a concrete artifact you'll produce.
+          </p>
+        </article>
+
+        <!-- STEP 4 -->
+        <article class="walk-step" id="step-4">
+          <div class="walk-step-head">
+            <span class="walk-step-num">04</span>
+            <h2 class="walk-step-title">Resume into the first task.</h2>
+          </div>
+          <p class="walk-prose">
+            Even on a fresh project, <code>/ds-work-continue</code> is worth running. It reads <code>milestones.md</code>, inspects <code>git log</code> and <code>git status</code>, and tells you exactly where to pick up. One less decision in the morning — same command every session.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-continue</span>
+
+<span class="muted">Reading product/ds-work-mode.txt… lite</span>
+<span class="muted">Reading product/milestones.md…</span>
+<span class="muted">git log --oneline -8… no commits yet</span>
+<span class="muted">git status… idea.txt untracked, product/ untracked</span>
+
+<span class="ok">## Resume Brief</span>
+
+<span class="ok">Milestone:</span> M1 — scaffold + health endpoint
+<span class="ok">Progress: </span> 0 / 3 tasks ticked
+<span class="ok">Next task:</span> pyproject.toml with fastapi, sqlalchemy, uvicorn deps
+<span class="ok">Blockers: </span> none — fresh project, no commits yet
+<span class="ok">Parking:  </span> 0 open items
+
+<span class="muted">Shall I draft pyproject.toml?</span>
+
+<span class="prompt">&gt;</span> yes, go</pre>
+          </div>
+          <p class="walk-prose">
+            Claude writes <code>pyproject.toml</code>, generates <code>src/linkjar/main.py</code> with the <code>/healthz</code> endpoint, and you boot the server with <code>uvicorn</code> to confirm it works. Standard loop. The plugin isn't doing the coding — it's holding the state between the coding sessions.
+          </p>
+        </article>
+
+        <!-- STEP 5 -->
+        <article class="walk-step" id="step-5">
+          <div class="walk-step-head">
+            <span class="walk-step-num">05</span>
+            <h2 class="walk-step-title">Checkpoint mid-flow.</h2>
+          </div>
+          <p class="walk-prose">
+            You've been heads-down for an hour. Two tasks done, a decision made along the way (single-package <code>src/</code> layout). Run <code>/ds-work-update</code> to drop a timestamped snapshot into today's session report. It doesn't commit, doesn't halt — just records what's happened so far.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-update</span>
+
+<span class="muted">Appending to product/reports/2026-10-09.md…</span>
+
+<span class="ok">### 11:14 checkpoint</span>
+- M1 task 1 ✓ pyproject.toml with fastapi, sqlalchemy, uvicorn
+- M1 task 2 ✓ src/linkjar/main.py with /healthz returning {"status":"ok"}
+- M1 task 3 pending: README quickstart
+- Decision: single-package src/ layout (no monorepo). Easier packaging later.
+- Next: draft README, then move to M2 — CRUD bookmarks.
+
+<span class="ok">✓ Snapshot written. No commit, no halt — keep going.</span></pre>
+          </div>
+          <div class="walk-callout">
+            <div class="walk-callout-label">Why bother</div>
+            <p>
+              Future-you reading <code>reports/2026-10-09.md</code> next week sees not just what you did but <em>why</em>. The "Decision" line costs five seconds now and saves fifteen minutes of "wait, why did we not use a monorepo again?" later.
+            </p>
+          </div>
+        </article>
+
+        <!-- STEP 6 -->
+        <article class="walk-step" id="step-6">
+          <div class="walk-step-head">
+            <span class="walk-step-num">06</span>
+            <h2 class="walk-step-title">Park a drifting thought.</h2>
+          </div>
+          <p class="walk-prose">
+            Mid-task, a thought drifts in: <em>sqlite is fine now, but I'll want Postgres before this leaves my laptop.</em> You don't want to context-switch into infra planning. Park it.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-parking-lot</span> add "swap sqlite for Postgres before deploying anywhere real"
+
+<span class="muted">Appending to product/parking-lot.md under ## Open (newest at top)…</span>
+<span class="ok">✓ Parked.</span> <span class="muted">Back to M1 task 3.</span></pre>
+          </div>
+          <p class="walk-prose">
+            Two seconds. No ticket, no Slack message, no Notion page. The thought is captured somewhere you'll actually look at it — <code>/ds-work-continue</code> surfaces open parking-lot items in the resume brief.
+          </p>
+        </article>
+
+        <!-- STEP 7 -->
+        <article class="walk-step" id="step-7">
+          <div class="walk-step-head">
+            <span class="walk-step-num">07</span>
+            <h2 class="walk-step-title">Wrap the session cleanly.</h2>
+          </div>
+          <p class="walk-prose">
+            You've finished M1. Run <code>/ds-work-halt</code>. It's not just <code>git commit && git push</code> — it ticks the milestone, writes the final session report, sweeps parking-lot/recurring, and asks if there's anything left to capture before committing. Half of why the plugin exists is that this moment is always the one you skip when you're tired.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-halt</span>
+
+<span class="muted">Reading milestones.md, git log, git status…</span>
+
+<span class="muted">Anything that came up this session worth parking? (one line per item, or skip)</span>
+<span class="prompt">&gt;</span> skip   <span class="muted"># already parked the Postgres one</span>
+
+<span class="muted">M1 progress: 3 / 3 tasks complete — milestone done.</span>
+  <span class="ok">✓</span> Flipping M1 → ✓ in milestones.md
+  <span class="ok">✓</span> Setting M2 → 🔄 in progress
+
+<span class="muted">Writing product/reports/2026-10-09.md…</span>
+  <span class="ok">✓</span> Final session summary appended (M1 shipped)
+
+<span class="muted">Committing src/, pyproject.toml, README.md, product/…</span>
+  <span class="ok">✓</span> 7 files, 243 insertions
+  <span class="ok">✓</span> Pushed to origin/main
+
+<span class="ok">Session wrapped.</span> <span class="muted">Tomorrow's /ds-work-continue picks up at M2 — CRUD bookmarks.</span></pre>
+          </div>
+          <div class="walk-callout">
+            <div class="walk-callout-label">Project-specific halt steps</div>
+            <p>
+              Drop a <code>product/how-to/ds-work-halt.md</code> in your repo and <code>/ds-work-halt</code> will fold its steps in. For linkjar it's nothing special, but if you were paying for a GPU pool, you'd put "scale deployment to 0" in there and never forget again.
+            </p>
+          </div>
+        </article>
+
+        <!-- STEP 8 -->
+        <article class="walk-step" id="step-8">
+          <div class="walk-step-head">
+            <span class="walk-step-num">08</span>
+            <h2 class="walk-step-title">Come back the next day.</h2>
+          </div>
+          <p class="walk-prose">
+            It's tomorrow morning. You open the project, launch Claude, and run the same command you ran yesterday. No "where was I" ritual. No scrolling through yesterday's chat. The resume brief is three lines of what matters.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="code-comment">$</span> cd ~/code/linkjar &amp;&amp; claude
+
+<span class="prompt">&gt;</span> <span class="cmd">/ds-work-continue</span>
+
+<span class="muted">Reading product/ds-work-mode.txt… lite</span>
+<span class="muted">Reading product/milestones.md…</span>
+<span class="muted">git log --oneline -8… 3 commits ahead of yesterday</span>
+<span class="muted">git status… clean</span>
+
+<span class="ok">## Resume Brief</span>
+
+<span class="ok">Milestone:</span> M2 — CRUD bookmarks (promoted to 🔄 last session)
+<span class="ok">Progress: </span> 0 / 4 tasks ticked
+<span class="ok">Next task:</span> SQLAlchemy model: id, url, title, created_at
+<span class="ok">Recent:   </span> yesterday — M1 shipped, FastAPI boots, /healthz green
+<span class="ok">Parking:  </span> 1 open item ("swap sqlite for Postgres before deploying")
+
+<span class="muted">Draft src/linkjar/models.py?</span></pre>
+          </div>
+        </article>
+
+        <!-- STEP 9 -->
+        <article class="walk-step" id="step-9">
+          <div class="walk-step-head">
+            <span class="walk-step-num">09</span>
+            <h2 class="walk-step-title">Stay oriented mid-flow.</h2>
+          </div>
+          <p class="walk-prose">
+            You've been heads-down for 90 minutes on M2. Model written, POST and GET working, you glance up and lose the thread for ten seconds — <em>what was I about to do</em>. Run <code>/ds-work-status</code>. It's <code>/ds-work-continue</code>'s little sibling: no preamble, just the next move and how to verify it.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-status</span>
+
+<span class="ok">M2 (lite) · 2 / 4 ticked</span>
+
+<span class="ok">Next:  </span> alembic migration for the bookmarks table
+<span class="ok">File:  </span> alembic/versions/0001_bookmarks.py
+<span class="ok">Verify:</span> <span class="cmd">alembic upgrade head</span> creates the table;
+         <span class="cmd">pytest tests/test_bookmarks.py</span> passes</pre>
+          </div>
+          <p class="walk-prose">
+            Four lines. Enough to get back to typing without re-reading <code>milestones.md</code>.
+          </p>
+        </article>
+
+        <!-- STEP 10 -->
+        <article class="walk-step" id="step-10">
+          <div class="walk-step-head">
+            <span class="walk-step-num">10</span>
+            <h2 class="walk-step-title">Finish the last milestone.</h2>
+          </div>
+          <p class="walk-prose">
+            A few sessions later. M2 shipped. M3 (auth) shipped. You've just finished the tests for tag filtering in M4. One more <code>/ds-work-halt</code>.
+          </p>
+          <div class="walk-terminal">
+            <div class="terminal-chrome">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span class="terminal-title">claude code — linkjar</span>
+            </div>
+            <pre class="terminal-body"><span class="prompt">&gt;</span> <span class="cmd">/ds-work-halt</span>
+
+<span class="muted">Reading milestones.md, git log, git status…</span>
+
+<span class="muted">Anything that came up this session worth parking? (one line per item, or skip)</span>
+<span class="prompt">&gt;</span> skip
+
+<span class="muted">M4 progress: 3 / 3 tasks complete — milestone done.</span>
+  <span class="ok">✓</span> Flipping M4 → ✓ in milestones.md
+
+<span class="muted">All four milestones ticked. No active milestone remaining.</span>
+
+<span class="muted">Writing product/reports/2026-10-16.md…</span>
+  <span class="ok">✓</span> Final session summary appended
+<span class="muted">Committing src/, tests/, product/…</span>
+  <span class="ok">✓</span> 4 files, 112 insertions
+  <span class="ok">✓</span> Pushed to origin/main
+
+<span class="ok">linkjar v0.1 is done.</span>
+
+<span class="muted">Parking-lot has 1 open item ("swap sqlite for Postgres before deploying").
+If the next phase involves real users or stakeholders, consider /ds-work-graduate
+to add vision.md, roadmap.md, and per-milestone PRDs.</span></pre>
+          </div>
+        </article>
+
+        <!-- CLOSE -->
+        <article class="walk-close">
+          <h2 class="walk-close-title">That's the loop.</h2>
+          <p class="walk-close-lead">
+            Six commands, used repeatedly. <code>scaffold</code> once. Then <code>continue</code> / <code>update</code> / <code>halt</code> daily, <code>parking-lot</code> when a thought drifts in, <code>status</code> when you lose the thread. The other fourteen commands exist for the day you need them — writing a vision doc, adversarially reviewing a plan, drafting a one-pager. For most projects, the six above are all you'll touch.
+          </p>
+          <p class="walk-close-lead">
+            Nothing in this walkthrough was fabricated for the demo. Every terminal block mirrors what the commands actually print, down to the resume brief format and the halt sequence. Try it on a project that's been drifting — <code>/ds-work-scaffold --lite</code> in the project root, then ask Claude to seed <code>milestones.md</code> from whatever brief you already have.
+          </p>
+          <div class="walk-close-cta">
+            <a href="index.html#install" class="btn btn-primary">Install the plugin</a>
+            <a href="https://github.com/shyamsfo/ds-work-plugin/blob/main/USER-GUIDE.md" class="btn btn-secondary" target="_blank" rel="noopener">Read the full user guide</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark">/</span>
+        <span class="brand-name">ds-work</span>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="walkthrough.html">Walkthrough</a>
+        <a href="https://github.com/shyamsfo/ds-work-plugin" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/shyamsfo/ds-work-plugin/blob/main/USER-GUIDE.md" target="_blank" rel="noopener">User Guide</a>
+        <a href="https://github.com/shyamsfo/ds-work-plugin/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+      <div class="footer-meta">A Claude Code plugin · built for developers who ship.</div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
