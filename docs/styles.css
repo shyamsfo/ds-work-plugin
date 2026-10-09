@@ -1062,28 +1062,52 @@ a:hover { color: var(--accent-hover); }
   font-weight: 500;
 }
 
-.walk-map-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.walk-map-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
-.walk-map-item {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 14px;
-  padding: 16px 0;
-  border-bottom: 1px dashed var(--border);
-  align-items: start;
+.walk-map-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  font-size: 0.94rem;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
-.walk-map-item:last-child { border-bottom: none; }
+.walk-map-table tr:last-child td {
+  border-bottom: none;
+}
 
-.walk-map-item > div { min-width: 0; }
+.walk-map-table td:first-child {
+  border-right: 1px solid var(--border);
+  width: 260px;
+  background: var(--bg-alt);
+}
 
-.walk-map-item > div > code {
+.walk-map-table td code {
+  font-size: 0.88em;
+  background: var(--bg-code);
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.cmd-cell {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cmd-cell > code {
   font-family: var(--font-mono);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--text);
   background: transparent;
   border: none;
@@ -1091,17 +1115,8 @@ a:hover { color: var(--accent-hover); }
   font-weight: 600;
 }
 
-.walk-map-item.done > div > code { color: var(--accent); }
-
-.walk-map-item p {
-  margin: 6px 0 0;
-  color: var(--text-muted);
-  font-size: 0.94rem;
-  line-height: 1.6;
-}
-
-.walk-map-item p code {
-  font-size: 0.88em;
+.walk-map-table tr.done .cmd-cell > code {
+  color: var(--accent);
 }
 
 .walk-map-tick {
@@ -1114,7 +1129,6 @@ a:hover { color: var(--accent-hover); }
   font-size: 0.78rem;
   font-weight: 700;
   flex-shrink: 0;
-  margin-top: 2px;
 }
 
 .walk-map-tick.done {
@@ -1221,6 +1235,7 @@ a:hover { color: var(--accent-hover); }
   }
 
   .walk-map { padding: 40px 0 16px; }
-  .walk-map-item { padding: 14px 0; }
   .walk-map-legend { gap: 10px 20px; padding: 12px 16px; font-size: 0.85rem; }
+  .walk-map-table td { padding: 12px 14px; font-size: 0.9rem; }
+  .walk-map-table td:first-child { width: 180px; }
 }
