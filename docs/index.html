@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ds-work — project management as slash commands for Claude Code</title>
-  <meta name="description" content="A Claude Code plugin that adds 20 lightweight slash commands for managing software projects end-to-end: vision, roadmap, milestones, session lifecycle, parking lot, backlog, and review." />
+  <meta name="description" content="A Claude Code plugin that adds 21 lightweight slash commands for managing software projects end-to-end: vision, roadmap, milestones, session lifecycle, parking lot, backlog, bugs, nitpicks, and review." />
   <script>
     (function () {
       try {
@@ -63,7 +63,7 @@
           <span class="accent">as slash commands.</span>
         </h1>
         <p class="hero-subtitle">
-          <strong>ds-work</strong> adds 20 lightweight commands to Claude Code — vision, roadmap, milestones, session lifecycle, parking lot, backlog, review. One question, one document. Zero boilerplate.
+          <strong>ds-work</strong> adds 21 lightweight commands to Claude Code — vision, roadmap, milestones, session lifecycle, parking lot, backlog, bugs, nitpicks, review. One question, one document. Zero boilerplate.
         </p>
         <div class="hero-cta">
           <a href="#install" class="btn btn-primary">Get started</a>
@@ -209,7 +209,7 @@
       <div class="container">
         <div class="section-head">
           <div class="eyebrow">The command map</div>
-          <h2>20 commands, four phases.</h2>
+          <h2>21 commands, four phases.</h2>
           <p class="section-lead">
             Setup → Plan → Work → Review. Every command reads existing state and does the smallest useful thing.
           </p>
@@ -277,6 +277,14 @@
             <div class="cmd-card">
               <code class="cmd-name">/ds-work-recurring</code>
               <p>Tasks that decay — refresh a snapshot, re-validate a pin, sweep a dir.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-bug</code>
+              <p>Confirmed defects you're not fixing right now. Swept each session by <code>halt</code>.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-name">/ds-work-nitpick</code>
+              <p>Polish items that work but could be better. Same shape as bugs.</p>
             </div>
           </div>
         </div>

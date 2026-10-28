@@ -481,7 +481,7 @@ to add vision.md, roadmap.md, and per-milestone PRDs.</span></pre>
         <section class="walk-map" id="map">
           <h2 class="walk-map-title">The full command map.</h2>
           <p class="walk-map-lead">
-            linkjar exercised six of the nineteen commands. Here's where they fit, and what the other thirteen do — including the ones that only make sense once you've graduated to full mode.
+            linkjar exercised six of the twenty-one commands. Here's where they fit, and what the other fifteen do — including the ones that only make sense once you've graduated to full mode.
           </p>
 
           <div class="walk-map-legend">
@@ -596,6 +596,20 @@ to add vision.md, roadmap.md, and per-milestone PRDs.</span></pre>
                     <code>/ds-work-recurring</code>
                   </td>
                   <td>Tasks that decay — refresh a snapshot every 30 days, re-validate a pinned version every 90 days, sweep a directory every week. Overdue items surface in <code>/ds-work-continue</code>'s resume brief so you don't forget them.</td>
+                </tr>
+                <tr>
+                  <td class="cmd-cell">
+                    <span class="walk-map-tick todo">○</span>
+                    <code>/ds-work-bug</code>
+                  </td>
+                  <td>Confirmed defects you're not fixing this session. Four forms: list, <code>add</code>, <code>done</code>, <code>drop</code>. <code>/ds-work-halt</code> sweeps for new bugs at session end; <code>/ds-work-continue</code> surfaces the open count in the resume brief above parking-lot (bugs are more urgent).</td>
+                </tr>
+                <tr>
+                  <td class="cmd-cell">
+                    <span class="walk-map-tick todo">○</span>
+                    <code>/ds-work-nitpick</code>
+                  </td>
+                  <td>Polish items that work but could be better. Same shape as <code>/ds-work-bug</code>. A nitpick is a <em>statement</em> ("icon colour is inconsistent"); a bug is a <em>defect</em> ("the flow didn't fire"); a parking-lot item is a <em>question</em> ("should we standardize status colours?").</td>
                 </tr>
               </tbody>
             </table>

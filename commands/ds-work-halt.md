@@ -64,6 +64,24 @@ Also: if the user surfaced a new recurring task worth tracking (not a one-off �
 
 If the user skips, move on silently.
 
+## 2c. Sweep for bugs
+
+Ask the user a single, skippable question: *"Any bugs you noticed this session? (one line per item, or skip)"*
+
+For each line, append it to `<dir>/bugs.md` under `## Open` (newest at top) following the format used by `/ds-work-bug add`. If `bugs.md` does not exist, create it from the template (see `/ds-work-bug`).
+
+Also: if the user reports that a bug was **fixed** or **dropped** this session, apply the `/ds-work-bug done <match>` or `/ds-work-bug drop <match> <reason>` flow — move the matching entry from `## Open` to `## Done / Dropped (last 10)` and trim tail to 10.
+
+If the user skips, move on silently.
+
+## 2d. Sweep for nitpicks
+
+Ask the user a single, skippable question: *"Any nitpicks worth logging? (one line per item, or skip)"*
+
+Same handling as 2c, but with `<dir>/nitpicks.md` and the `/ds-work-nitpick` flows.
+
+If the user skips, move on silently.
+
 ## 3. Update milestones.md and the active PLAN
 
 Go through the active milestone task list in `milestones.md`. For each task completed this session, change `[ ]` to `[x]`. For any task in progress but not done, use `[~]`. Be conservative — only check off tasks that are verifiably complete.
@@ -119,6 +137,14 @@ If the file already exists, append a new section. **Full mode** uses the sub-sta
 <!-- Include this section ONLY if any recurring items were completed or added this session. Omit otherwise. -->
 - <item title> — <marked done | added (<cadence>)>
 
+### Bugs
+<!-- Include this section ONLY if any bug entries changed this session. Omit otherwise. -->
+- <bug title> — <added | fixed | dropped (<reason>)>
+
+### Nitpicks
+<!-- Include this section ONLY if any nitpick entries changed this session. Omit otherwise. -->
+- <nitpick title> — <added | cleaned up | dropped (<reason>)>
+
 ### Next session starts at
 <next unchecked PLAN item, or first unchecked task from milestones.md if no PLAN exists>
 ```
@@ -137,6 +163,8 @@ Stage all modified files:
 - `<dir>/design/M{N}-PLAN.md` *(full mode only, if PLAN checkboxes were ticked this session)*
 - `<dir>/parking-lot.md` (if parking-lot was modified this session)
 - `<dir>/recurring.md` (if recurring items were marked done or added this session)
+- `<dir>/bugs.md` (if bug entries were added, fixed, or dropped this session)
+- `<dir>/nitpicks.md` (if nitpick entries were added, cleaned up, or dropped this session)
 - `<dir>/reports/YYYY-MM-DD.md`
 - Any other modified tracked files surfaced by git status
 - New untracked files that are clearly intentional (reports, design docs, config files)

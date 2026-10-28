@@ -28,6 +28,8 @@ If none of these files exist in the given directory, search the repo for files w
 - If `<dir>/how-to/ds-work-continue.md` exists, read it now and follow any project-specific context-gathering steps listed there (e.g. reading a cluster state file, checking additional infra docs) before proceeding.
 - Run `git log --oneline -8` to see recent commits
 - Run `git status` to surface any uncommitted or untracked changes
+- If `<dir>/bugs.md` exists, count items under `## Open` (used in the resume brief if > 0)
+- If `<dir>/nitpicks.md` exists, count items under `## Open` (used in the resume brief if > 0)
 - If `<dir>/parking-lot.md` exists, count items under `## Open` (used in the resume brief if > 0)
 - If `<dir>/recurring.md` exists, count items under `## Open` and compute how many are **overdue** (today − last_run > cadence_days, or "Last run: never"). Cadence intervals: 🕐 = 7d, 🕐🕐 = 30d, 🕐🕐🕐 = 90d. Signal-driven (📡) items never count as overdue. Used in the resume brief if overdue > 0.
 
@@ -85,10 +87,17 @@ Then load the appropriate working context:
 **Uncommitted changes**: <none / list files if any>
 **Recent commits**: <last 3–4 one-liners from git log>
 
-<!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
+<!-- Order below is bugs → nitpicks → parking-lot → recurring (most severe first). Each line is included ONLY if its file has open/overdue items. -->
+<!-- Include the next line ONLY if bugs.md has open items. Omit otherwise. -->
+**Bugs**: <N> open — run `/ds-work-bug` to review.
+
+<!-- Include the next line ONLY if nitpicks.md has open items. Omit otherwise. -->
+**Nitpicks**: <N> open — run `/ds-work-nitpick` to review.
+
+<!-- Include the next line ONLY if parking-lot.md has open items. Omit otherwise. -->
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
 
-<!-- Include the next line ONLY if recurring.md has overdue items. Omit it entirely otherwise. -->
+<!-- Include the next line ONLY if recurring.md has overdue items. Omit otherwise. -->
 **Recurring**: <N> overdue — run `/ds-work-recurring` to review.
 ```
 
@@ -106,10 +115,17 @@ Then load the appropriate working context:
 **Uncommitted changes**: <none / list files if any>
 **Recent commits**: <last 3–4 one-liners from git log>
 
-<!-- Include the next line ONLY if parking-lot.md has open items. Omit it entirely otherwise. -->
+<!-- Order below is bugs → nitpicks → parking-lot → recurring (most severe first). Each line is included ONLY if its file has open/overdue items. -->
+<!-- Include the next line ONLY if bugs.md has open items. Omit otherwise. -->
+**Bugs**: <N> open — run `/ds-work-bug` to review.
+
+<!-- Include the next line ONLY if nitpicks.md has open items. Omit otherwise. -->
+**Nitpicks**: <N> open — run `/ds-work-nitpick` to review.
+
+<!-- Include the next line ONLY if parking-lot.md has open items. Omit otherwise. -->
 **Parking lot**: <N> open — run `/ds-work-parking-lot` to review.
 
-<!-- Include the next line ONLY if recurring.md has overdue items. Omit it entirely otherwise. -->
+<!-- Include the next line ONLY if recurring.md has overdue items. Omit otherwise. -->
 **Recurring**: <N> overdue — run `/ds-work-recurring` to review.
 ```
 

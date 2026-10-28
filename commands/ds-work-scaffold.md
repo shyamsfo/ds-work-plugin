@@ -58,6 +58,8 @@ product/
 ├── backlog.md                    # low-commitment mind-dump (placeholder)
 ├── parking-lot.md                # unscheduled work items (placeholder)
 ├── recurring.md                  # recurring-maintenance list (placeholder)
+├── bugs.md                       # defects discovered but not yet fixed (placeholder)
+├── nitpicks.md                   # polish items that could be better (placeholder)
 ├── project-management-principles.md   # canonical PM reference (copied from scaffold)
 ├── design/                       # PRDs and PLANs per milestone (empty, ready to use)
 ├── reviews/                      # challenge reports (empty, ready to use)
@@ -84,6 +86,8 @@ product/
 ├── backlog.md                    # low-commitment mind-dump (placeholder)
 ├── parking-lot.md                # unscheduled work items (placeholder)
 ├── recurring.md                  # recurring-maintenance list (placeholder)
+├── bugs.md                       # defects discovered but not yet fixed (placeholder)
+├── nitpicks.md                   # polish items that could be better (placeholder)
 ├── project-management-principles.md   # canonical PM reference (copied from scaffold, lite variant)
 ├── research/                     # pre-decision options analyses and deep dives (empty)
 │   └── spikes/                   # time-boxed feasibility investigations
@@ -123,6 +127,8 @@ Single line, no trailing content. This is the first file to create — every sub
 - Step 5a (parking-lot.md)
 - Step 5b (backlog.md)
 - Step 5c (recurring.md)
+- Step 5d (bugs.md)
+- Step 5e (nitpicks.md)
 - Step 6 (how-to/ds-work-continue.md)
 - Step 7 (how-to/ds-work-halt.md)
 - Step 8 (how-to/ds-work-update.md)
@@ -462,6 +468,48 @@ Every item must have a cadence marker, a title, a pointer (where the how-to live
 <!-- newest first; auto-trimmed to 10; format: - YYYY-MM-DD — <title>: <summary> -->
 ```
 
+### 5d. Create product/bugs.md
+
+```markdown
+# Bugs
+
+Actual defects discovered but not yet fixed. If you fix a bug this session, move the entry to Done. Keep this list short — bugs should get prioritized, not accumulated.
+
+Managed by `/ds-work-bug`. `/ds-work-halt` asks each session whether anything new is worth logging; `/ds-work-continue` surfaces the open count in the resume brief.
+
+## Open
+
+<!-- newest first; format:
+- **<title>** · YYYY-MM-DD
+  - <optional one-line body / severity / context>
+-->
+
+## Done / Dropped (last 10)
+
+<!-- newest first; auto-trimmed to 10 -->
+```
+
+### 5e. Create product/nitpicks.md
+
+```markdown
+# Nitpicks
+
+Minor polish items — things that work but could be better. Logged ad hoc so they don't rot in a Slack DM; sweep at session end via `/ds-work-halt`.
+
+Managed by `/ds-work-nitpick`. `/ds-work-halt` asks each session whether anything new is worth logging; `/ds-work-continue` surfaces the open count in the resume brief.
+
+## Open
+
+<!-- newest first; format:
+- **<title>** · YYYY-MM-DD
+  - <optional one-line body / context>
+-->
+
+## Done / Dropped (last 10)
+
+<!-- newest first; auto-trimmed to 10 -->
+```
+
 ### 6. Create product/how-to/ds-work-continue.md
 
 ```markdown
@@ -605,8 +653,10 @@ product/roadmap.md           ← what + how (architecture, milestones, key decis
 product/milestones.md        ← progress tracker (story checkboxes, milestone status)
 product/now.md               ← session pointer (what I'm doing right now)
 product/backlog.md           ← low-commitment mind-dump (no priority, no tags)
-product/parking-lot.md       ← unscheduled work items (bugs, chores, ideas captured for later)
+product/parking-lot.md       ← unscheduled work items (ideas, chores, "should we…" questions)
 product/recurring.md         ← recurring-maintenance list (tasks that decay and need periodic touching)
+product/bugs.md              ← actual defects discovered but not yet fixed
+product/nitpicks.md          ← polish items that work but could be better
 product/design/M{N}-PRD.md   ← milestone spec (what to build, scope, success criteria)
 product/design/M{N}-PLAN.md  ← milestone execution checklist (sub-task checkboxes)
 product/reviews/             ← challenge reports (adversarial reviews of planning artifacts)
@@ -685,6 +735,32 @@ Each item has a cadence marker (🕐 weekly / 🕐🕐 monthly / 🕐🕐🕐 qu
 Managed by `/ds-work-recurring` — show overdue + upcoming (`/ds-work-recurring`), add new items (`/ds-work-recurring add <text>`), mark completed items done to update last-run (`/ds-work-recurring done <match>`), or sweep to keep/adjust/drop stale entries (`/ds-work-recurring sweep`). `/ds-work-status` and `/ds-work-continue` surface overdue counts; `/ds-work-halt` asks whether any recurring items were completed this session.
 
 If an item will complete exactly once and then be done, it belongs in `parking-lot.md`, not `recurring.md`.
+
+### `product/bugs.md` — The Bugs List
+
+Actual defects that have been observed but not yet fixed. If you fix a bug in the session where you discover it, don't log it — just fix it. The list is for deferred work.
+
+Each entry is a bolded title with a date, optionally followed by indented body lines for severity or reproduction context:
+
+```markdown
+- **Flow didn't fire after Status update** · 2026-10-28
+  - happens when Status moves from Draft → Review
+  - Chrome 128, user with role=Admin
+```
+
+Managed by `/ds-work-bug`. `/ds-work-halt` asks each session whether anything new is worth logging; `/ds-work-continue` surfaces the open count in the resume brief above parking-lot/recurring (bugs are more urgent).
+
+The Done/Dropped tail is capped at 10 — git history and session reports are the long-term archive. No severity field, no "assigned to", no linked PRs — the file is small enough that reading it beats filtering it.
+
+Distinct from `parking-lot.md` (which is for questions and ideas, not confirmed defects) and `nitpicks.md` (polish, not broken). Distinct from `milestones.md` (features and scoped work live there).
+
+### `product/nitpicks.md` — The Nitpicks List
+
+Minor polish items — things that work but could be better. Format identical to `bugs.md` (bolded title, dated, optional body lines).
+
+Rule of thumb: a nitpick is a **statement** ("flag icon is red in Stats, blue in state LWC"); a parking-lot item is a **question** ("should we standardize the status colors?"); a bug is a **defect** ("Status update doesn't trigger the flow").
+
+Managed by `/ds-work-nitpick`. Same sweep/surface pattern as bugs. Nitpicks don't typically need severity or context — if you're reaching for structure, the item probably belongs in `parking-lot.md` or `milestones.md` instead.
 
 ### `product/now.md` — The Session Pointer
 
@@ -854,6 +930,8 @@ Nothing is duplicated. Each document answers exactly one question.
 | What half-formed thought do I want to remember? | `backlog.md` |
 | What's parked for later (not yet scheduled)? | `parking-lot.md` |
 | What needs periodic re-touching (refresh, sweep, re-validate)? | `recurring.md` |
+| What's a confirmed defect I'm not fixing right now? | `bugs.md` |
+| What polish item should I eventually clean up? | `nitpicks.md` |
 | What exactly does milestone N require? | `product/design/M{N}-PRD.md` |
 | What's the execution checklist for milestone N? | `product/design/M{N}-PLAN.md` |
 | Which concerns were raised against a planning artifact? | `product/reviews/<target>-challenge-YYYY-MM-DD.md` |
@@ -923,8 +1001,10 @@ product/
 ├── ds-work-mode.txt               ← contains "lite"
 ├── milestones.md               ← all milestones in one file. Sections per milestone with goal + task checklist. **This file IS the plan.**
 ├── backlog.md                  ← low-commitment mind-dump (no priority, no tags)
-├── parking-lot.md              ← unscheduled work items (bugs, chores, ideas captured for later)
+├── parking-lot.md              ← unscheduled work items (ideas, chores, "should we…" questions)
 ├── recurring.md                ← recurring-maintenance list (tasks that decay and need periodic touching)
+├── bugs.md                     ← actual defects discovered but not yet fixed
+├── nitpicks.md                 ← polish items that work but could be better
 ├── project-management-principles.md   ← this file
 ├── research/                   ← pre-decision options analyses (ds-work-research)
 │   └── spikes/                 ← time-boxed feasibility investigations (ds-work-spike)
@@ -964,6 +1044,12 @@ Items that are worth tackling eventually but aren't in the active milestone. Tag
 
 Tasks that decay and need periodic touching (refresh a snapshot, sweep a directory, re-validate a pin). Cadence marker + pointer + last-run field per item. Managed by `/ds-work-recurring`. `/ds-work-status` and `/ds-work-continue` surface overdue counts; `/ds-work-halt` asks about done items each session.
 
+### `bugs.md` + `nitpicks.md` — worklists for defects and polish (unchanged from full mode)
+
+`bugs.md` tracks actual defects you've observed but aren't fixing right now. `nitpicks.md` tracks small polish items that work but could be better. Both files use the same format (bolded title + date + optional body lines), both have `## Open` and `## Done / Dropped (last 10)` sections, and both are swept at the end of each session by `/ds-work-halt`. Managed by `/ds-work-bug` and `/ds-work-nitpick`.
+
+A bug is a **defect** ("Status update doesn't trigger the flow"). A nitpick is a **statement** ("flag icon is red in Stats, blue in state LWC"). A parking-lot item is a **question** ("should we standardize the status colors?"). If you're fixing it this session, don't log it — just fix it.
+
 ### `reports/` — session history (unchanged from full mode)
 
 One file per day, written by `/ds-work-update` (mid-session) and `/ds-work-halt` (session end).
@@ -981,6 +1067,8 @@ One file per day, written by `/ds-work-update` (mid-session) and `/ds-work-halt`
 | `/ds-work-backlog` | Unchanged from full mode |
 | `/ds-work-parking-lot` | Unchanged from full mode |
 | `/ds-work-recurring` | Unchanged from full mode |
+| `/ds-work-bug` | Unchanged from full mode |
+| `/ds-work-nitpick` | Unchanged from full mode |
 | `/ds-work-spike` | Unchanged from full mode |
 | `/ds-work-research` | Unchanged from full mode |
 | `/ds-work-graduate` | Promote this project to full mode |
