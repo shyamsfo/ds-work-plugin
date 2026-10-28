@@ -1,7 +1,7 @@
 {
   "name": "ds-work",
-  "version": "0.4.0",
-  "description": "Lightweight project management for Claude Code — vision, roadmap, milestones, session lifecycle, and review commands. All slash commands are prefixed with /ds-work-.",
+  "version": "0.5.0",
+  "description": "Lightweight project management for Claude Code — vision, roadmap, milestones, session lifecycle, bugs, nitpicks, and review commands. All slash commands are prefixed with /ds-work-.",
   "author": {
     "name": "Shyam Maniyedath",
     "email": "shyam.maniyedath@gmail.com"
