@@ -59,6 +59,7 @@ product/
 ├── parking-lot.md                # unscheduled work items (placeholder)
 ├── recurring.md                  # recurring-maintenance list (placeholder)
 ├── bugs.md                       # defects discovered but not yet fixed (placeholder)
+├── todos.md                      # committed deferred work from closed milestones (placeholder)
 ├── nitpicks.md                   # polish items that could be better (placeholder)
 ├── project-management-principles.md   # canonical PM reference (copied from scaffold)
 ├── design/                       # PRDs and PLANs per milestone (empty, ready to use)
@@ -87,6 +88,7 @@ product/
 ├── parking-lot.md                # unscheduled work items (placeholder)
 ├── recurring.md                  # recurring-maintenance list (placeholder)
 ├── bugs.md                       # defects discovered but not yet fixed (placeholder)
+├── todos.md                      # committed deferred work from closed milestones (placeholder)
 ├── nitpicks.md                   # polish items that could be better (placeholder)
 ├── project-management-principles.md   # canonical PM reference (copied from scaffold, lite variant)
 ├── research/                     # pre-decision options analyses and deep dives (empty)
@@ -129,6 +131,7 @@ Single line, no trailing content. This is the first file to create — every sub
 - Step 5c (recurring.md)
 - Step 5d (bugs.md)
 - Step 5e (nitpicks.md)
+- Step 5f (todos.md)
 - Step 6 (how-to/ds-work-continue.md)
 - Step 7 (how-to/ds-work-halt.md)
 - Step 8 (how-to/ds-work-update.md)
@@ -510,6 +513,27 @@ Managed by `/ds-work-nitpick`. `/ds-work-halt` asks each session whether anythin
 <!-- newest first; auto-trimmed to 10 -->
 ```
 
+### 5f. Create product/todos.md
+
+```markdown
+# Todos
+
+Committed deferred work — things we know we need to do but weren't worth keeping a milestone open for. Distinct from `bugs.md` (defects), `nitpicks.md` (polish), and `parking-lot.md` (questions/ideas).
+
+Managed by `/ds-work-todo`. `/ds-work-halt` prompts for new todos when a milestone just closed; `/ds-work-continue` surfaces the open count in the resume brief above nitpicks/parking-lot (todos are committed work and rank just below bugs).
+
+## Open
+
+<!-- newest first; format:
+- **<title>** · YYYY-MM-DD [· from M{N}]
+  - <optional one-line body>
+-->
+
+## Done / Dropped (last 10)
+
+<!-- newest first; auto-trimmed to 10 -->
+```
+
 ### 6. Create product/how-to/ds-work-continue.md
 
 ```markdown
@@ -656,6 +680,7 @@ product/backlog.md           ← low-commitment mind-dump (no priority, no tags)
 product/parking-lot.md       ← unscheduled work items (ideas, chores, "should we…" questions)
 product/recurring.md         ← recurring-maintenance list (tasks that decay and need periodic touching)
 product/bugs.md              ← actual defects discovered but not yet fixed
+product/todos.md             ← committed deferred work from closed milestones
 product/nitpicks.md          ← polish items that work but could be better
 product/design/M{N}-PRD.md   ← milestone spec (what to build, scope, success criteria)
 product/design/M{N}-PLAN.md  ← milestone execution checklist (sub-task checkboxes)
@@ -754,13 +779,38 @@ The Done/Dropped tail is capped at 10 — git history and session reports are th
 
 Distinct from `parking-lot.md` (which is for questions and ideas, not confirmed defects) and `nitpicks.md` (polish, not broken). Distinct from `milestones.md` (features and scoped work live there).
 
+### `product/todos.md` — The Todos List
+
+Committed deferred work — things we know we need to do but weren't worth keeping a milestone open for. Typical origin: a milestone just closed and 2–3 items got consciously scoped out ("benchmark against larger cache TTLs — M2 only validated 5min", "wire Prometheus alerts before public launch"). The *commitment* is what distinguishes a todo from a parking-lot item.
+
+Entries carry an optional `· from M{N}` provenance suffix so future-you knows which milestone cut spawned the deferral:
+
+```markdown
+- **Benchmark larger cache TTLs** · 2026-10-29 · from M2
+  - M2 only validated 5min; want 1h/4h/24h data before prod
+```
+
+Managed by `/ds-work-todo`. `/ds-work-halt` only prompts the todos sweep when a milestone just closed (asking every session would be noise). `/ds-work-continue` surfaces the open count in the resume brief just below bugs — committed deferred work ranks above polish and questions.
+
+If a todo grows into real scoped work with exit criteria, promote it: add it as a task to the active or next milestone in `milestones.md`, then clear the entry with `/ds-work-todo done <match>`.
+
+Does not replace `milestones.md`'s **Deferred:** convention — that line in a closed milestone's section exists for auditors reading "did we really finish M{N}?". `todos.md` is the actionable worklist those deferred items feed into.
+
 ### `product/nitpicks.md` — The Nitpicks List
 
-Minor polish items — things that work but could be better. Format identical to `bugs.md` (bolded title, dated, optional body lines).
+Minor polish items — things that work but could be better. Format identical to `bugs.md`/`todos.md` (bolded title, dated, optional body lines).
 
-Rule of thumb: a nitpick is a **statement** ("flag icon is red in Stats, blue in state LWC"); a parking-lot item is a **question** ("should we standardize the status colors?"); a bug is a **defect** ("Status update doesn't trigger the flow").
+**The five-surface distinction:**
 
-Managed by `/ds-work-nitpick`. Same sweep/surface pattern as bugs. Nitpicks don't typically need severity or context — if you're reaching for structure, the item probably belongs in `parking-lot.md` or `milestones.md` instead.
+| Surface | Content | Example |
+|---|---|---|
+| `bugs.md` | defect — "it's broken" | *"Flow didn't fire after Status update"* |
+| `todos.md` | committed deferred work — "we will do this" | *"Benchmark larger cache TTLs — M2 only validated 5min"* |
+| `nitpicks.md` | polish — "works but could be better" | *"Flag icon is red in Stats, blue in state LWC"* |
+| `parking-lot.md` | question/idea — "should we…?" | *"Should we standardize the status colours?"* |
+| `backlog.md` | mind-dump — "don't want to forget this thought" | *"Explore RAG for large documents someday"* |
+
+Managed by `/ds-work-nitpick`. Same sweep/surface pattern as bugs. Nitpicks don't typically need severity or context — if you're reaching for structure, the item probably belongs in `parking-lot.md`, `todos.md`, or `milestones.md` instead.
 
 ### `product/now.md` — The Session Pointer
 
@@ -931,6 +981,7 @@ Nothing is duplicated. Each document answers exactly one question.
 | What's parked for later (not yet scheduled)? | `parking-lot.md` |
 | What needs periodic re-touching (refresh, sweep, re-validate)? | `recurring.md` |
 | What's a confirmed defect I'm not fixing right now? | `bugs.md` |
+| What's a committed todo deferred from a closed milestone? | `todos.md` |
 | What polish item should I eventually clean up? | `nitpicks.md` |
 | What exactly does milestone N require? | `product/design/M{N}-PRD.md` |
 | What's the execution checklist for milestone N? | `product/design/M{N}-PLAN.md` |
@@ -1004,6 +1055,7 @@ product/
 ├── parking-lot.md              ← unscheduled work items (ideas, chores, "should we…" questions)
 ├── recurring.md                ← recurring-maintenance list (tasks that decay and need periodic touching)
 ├── bugs.md                     ← actual defects discovered but not yet fixed
+├── todos.md                    ← committed deferred work from closed milestones
 ├── nitpicks.md                 ← polish items that work but could be better
 ├── project-management-principles.md   ← this file
 ├── research/                   ← pre-decision options analyses (ds-work-research)
@@ -1044,11 +1096,15 @@ Items that are worth tackling eventually but aren't in the active milestone. Tag
 
 Tasks that decay and need periodic touching (refresh a snapshot, sweep a directory, re-validate a pin). Cadence marker + pointer + last-run field per item. Managed by `/ds-work-recurring`. `/ds-work-status` and `/ds-work-continue` surface overdue counts; `/ds-work-halt` asks about done items each session.
 
-### `bugs.md` + `nitpicks.md` — worklists for defects and polish (unchanged from full mode)
+### `bugs.md` + `todos.md` + `nitpicks.md` — worklists for defects, deferred work, and polish (unchanged from full mode)
 
-`bugs.md` tracks actual defects you've observed but aren't fixing right now. `nitpicks.md` tracks small polish items that work but could be better. Both files use the same format (bolded title + date + optional body lines), both have `## Open` and `## Done / Dropped (last 10)` sections, and both are swept at the end of each session by `/ds-work-halt`. Managed by `/ds-work-bug` and `/ds-work-nitpick`.
+Three parallel files that all use the same format (bolded title + date + optional body lines), all have `## Open` and `## Done / Dropped (last 10)` sections, and are all swept by `/ds-work-halt` at session end:
 
-A bug is a **defect** ("Status update doesn't trigger the flow"). A nitpick is a **statement** ("flag icon is red in Stats, blue in state LWC"). A parking-lot item is a **question** ("should we standardize the status colors?"). If you're fixing it this session, don't log it — just fix it.
+- **`bugs.md`** — defects you've observed but aren't fixing right now. Managed by `/ds-work-bug`. Swept every session.
+- **`todos.md`** — committed work that got deferred when a milestone closed. Managed by `/ds-work-todo`. Only swept when a milestone just closed (asking every session would be noise). Entries can carry a `· from M{N}` provenance suffix.
+- **`nitpicks.md`** — small polish items that work but could be better. Managed by `/ds-work-nitpick`. Swept every session.
+
+**The five-surface distinction**: a bug is a **defect** ("Status update doesn't trigger the flow"), a todo is a **commitment** ("we will benchmark larger cache TTLs — just not this milestone"), a nitpick is a **polish statement** ("flag icon is red in Stats, blue in state LWC"), a parking-lot item is a **question** ("should we standardize the status colors?"), and a backlog item is a **mind-dump** ("explore RAG someday"). If you're fixing it this session, don't log it — just fix it.
 
 ### `reports/` — session history (unchanged from full mode)
 
@@ -1068,6 +1124,7 @@ One file per day, written by `/ds-work-update` (mid-session) and `/ds-work-halt`
 | `/ds-work-parking-lot` | Unchanged from full mode |
 | `/ds-work-recurring` | Unchanged from full mode |
 | `/ds-work-bug` | Unchanged from full mode |
+| `/ds-work-todo` | Unchanged from full mode |
 | `/ds-work-nitpick` | Unchanged from full mode |
 | `/ds-work-spike` | Unchanged from full mode |
 | `/ds-work-research` | Unchanged from full mode |

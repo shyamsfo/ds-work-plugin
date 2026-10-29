@@ -82,6 +82,18 @@ Same handling as 2c, but with `<dir>/nitpicks.md` and the `/ds-work-nitpick` flo
 
 If the user skips, move on silently.
 
+## 2e. Sweep for todos
+
+Only prompt this sweep if the active milestone transitioned to `✅ done` **this session** (per Step 3 below). Otherwise skip silently — todos are specifically about committed work scoped out of a *just-closed* milestone, and asking every session would be noise.
+
+If a milestone did just close, ask the user a single, skippable question: *"Anything committed but deferred from M{N}? (one line per item, or skip)"*
+
+For each line, apply the `/ds-work-todo add` flow — append it to `<dir>/todos.md` under `## Open` with today's date and a `· from M{N}` provenance suffix (using the milestone that just closed). If `todos.md` does not exist, create it from the template (see `/ds-work-todo`).
+
+If the user also reports that a todo was **done** or **dropped** this session, apply the `/ds-work-todo done <match>` or `/ds-work-todo drop <match> <reason>` flow — move the matching entry from `## Open` to `## Done / Dropped (last 10)` and trim tail to 10.
+
+If the user skips, move on silently.
+
 ## 3. Update milestones.md and the active PLAN
 
 Go through the active milestone task list in `milestones.md`. For each task completed this session, change `[ ]` to `[x]`. For any task in progress but not done, use `[~]`. Be conservative — only check off tasks that are verifiably complete.
@@ -141,6 +153,10 @@ If the file already exists, append a new section. **Full mode** uses the sub-sta
 <!-- Include this section ONLY if any bug entries changed this session. Omit otherwise. -->
 - <bug title> — <added | fixed | dropped (<reason>)>
 
+### Todos
+<!-- Include this section ONLY if any todo entries changed this session. Omit otherwise. -->
+- <todo title> — <added (from M{N}) | done | dropped (<reason>)>
+
 ### Nitpicks
 <!-- Include this section ONLY if any nitpick entries changed this session. Omit otherwise. -->
 - <nitpick title> — <added | cleaned up | dropped (<reason>)>
@@ -164,6 +180,7 @@ Stage all modified files:
 - `<dir>/parking-lot.md` (if parking-lot was modified this session)
 - `<dir>/recurring.md` (if recurring items were marked done or added this session)
 - `<dir>/bugs.md` (if bug entries were added, fixed, or dropped this session)
+- `<dir>/todos.md` (if todo entries were added, done, or dropped this session)
 - `<dir>/nitpicks.md` (if nitpick entries were added, cleaned up, or dropped this session)
 - `<dir>/reports/YYYY-MM-DD.md`
 - Any other modified tracked files surfaced by git status

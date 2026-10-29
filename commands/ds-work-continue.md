@@ -29,6 +29,7 @@ If none of these files exist in the given directory, search the repo for files w
 - Run `git log --oneline -8` to see recent commits
 - Run `git status` to surface any uncommitted or untracked changes
 - If `<dir>/bugs.md` exists, count items under `## Open` (used in the resume brief if > 0)
+- If `<dir>/todos.md` exists, count items under `## Open` (used in the resume brief if > 0)
 - If `<dir>/nitpicks.md` exists, count items under `## Open` (used in the resume brief if > 0)
 - If `<dir>/parking-lot.md` exists, count items under `## Open` (used in the resume brief if > 0)
 - If `<dir>/recurring.md` exists, count items under `## Open` and compute how many are **overdue** (today − last_run > cadence_days, or "Last run: never"). Cadence intervals: 🕐 = 7d, 🕐🕐 = 30d, 🕐🕐🕐 = 90d. Signal-driven (📡) items never count as overdue. Used in the resume brief if overdue > 0.
@@ -87,9 +88,12 @@ Then load the appropriate working context:
 **Uncommitted changes**: <none / list files if any>
 **Recent commits**: <last 3–4 one-liners from git log>
 
-<!-- Order below is bugs → nitpicks → parking-lot → recurring (most severe first). Each line is included ONLY if its file has open/overdue items. -->
+<!-- Order below is bugs → todos → nitpicks → parking-lot → recurring (most severe first). Each line is included ONLY if its file has open/overdue items. -->
 <!-- Include the next line ONLY if bugs.md has open items. Omit otherwise. -->
 **Bugs**: <N> open — run `/ds-work-bug` to review.
+
+<!-- Include the next line ONLY if todos.md has open items. Omit otherwise. -->
+**Todos**: <N> open — run `/ds-work-todo` to review.
 
 <!-- Include the next line ONLY if nitpicks.md has open items. Omit otherwise. -->
 **Nitpicks**: <N> open — run `/ds-work-nitpick` to review.
@@ -115,9 +119,12 @@ Then load the appropriate working context:
 **Uncommitted changes**: <none / list files if any>
 **Recent commits**: <last 3–4 one-liners from git log>
 
-<!-- Order below is bugs → nitpicks → parking-lot → recurring (most severe first). Each line is included ONLY if its file has open/overdue items. -->
+<!-- Order below is bugs → todos → nitpicks → parking-lot → recurring (most severe first). Each line is included ONLY if its file has open/overdue items. -->
 <!-- Include the next line ONLY if bugs.md has open items. Omit otherwise. -->
 **Bugs**: <N> open — run `/ds-work-bug` to review.
+
+<!-- Include the next line ONLY if todos.md has open items. Omit otherwise. -->
+**Todos**: <N> open — run `/ds-work-todo` to review.
 
 <!-- Include the next line ONLY if nitpicks.md has open items. Omit otherwise. -->
 **Nitpicks**: <N> open — run `/ds-work-nitpick` to review.

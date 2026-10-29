@@ -481,7 +481,7 @@ to add vision.md, roadmap.md, and per-milestone PRDs.</span></pre>
         <section class="walk-map" id="map">
           <h2 class="walk-map-title">The full command map.</h2>
           <p class="walk-map-lead">
-            linkjar exercised six of the twenty-one commands. Here's where they fit, and what the other fifteen do — including the ones that only make sense once you've graduated to full mode.
+            linkjar exercised six of the twenty-two commands. Here's where they fit, and what the other sixteen do — including the ones that only make sense once you've graduated to full mode.
           </p>
 
           <div class="walk-map-legend">
@@ -602,7 +602,14 @@ to add vision.md, roadmap.md, and per-milestone PRDs.</span></pre>
                     <span class="walk-map-tick todo">○</span>
                     <code>/ds-work-bug</code>
                   </td>
-                  <td>Confirmed defects you're not fixing this session. Four forms: list, <code>add</code>, <code>done</code>, <code>drop</code>. <code>/ds-work-halt</code> sweeps for new bugs at session end; <code>/ds-work-continue</code> surfaces the open count in the resume brief above parking-lot (bugs are more urgent).</td>
+                  <td>Confirmed defects you're not fixing this session. Four forms: list, <code>add</code>, <code>done</code>, <code>drop</code>. <code>/ds-work-halt</code> sweeps for new bugs at session end; <code>/ds-work-continue</code> surfaces the open count in the resume brief above todos/nitpicks/parking-lot (bugs are most urgent).</td>
+                </tr>
+                <tr>
+                  <td class="cmd-cell">
+                    <span class="walk-map-tick todo">○</span>
+                    <code>/ds-work-todo</code>
+                  </td>
+                  <td>Committed deferred work — things you know need to happen but weren't worth keeping a milestone open for ("benchmark larger cache TTLs — M2 only validated 5min"). Entries carry an optional <code>· from M{N}</code> provenance suffix. <code>/ds-work-halt</code> only prompts the todos sweep when a milestone just closed. A todo is a <em>commitment</em>; a parking-lot item is a <em>question</em>.</td>
                 </tr>
                 <tr>
                   <td class="cmd-cell">

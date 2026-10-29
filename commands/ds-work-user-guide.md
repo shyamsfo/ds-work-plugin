@@ -74,11 +74,22 @@ Run these every session, in order.
 | `/ds-work-parking-lot [add <text> \| pick \| <tag>]` | Anytime — when an idea/bug/chore comes up that isn't in the current milestone, or when you want to pull something off the lot | Default: shows the grouped list and suggests 1–3 picks. `add <text>` appends a new item. `pick` skips the list and only shows suggestions. A tag (`bug`, `chore`, `idea`, `research`) filters. Selected items can be tackled now, promoted into the active `M{N}-PLAN.md`, or dropped with a reason. |
 | `/ds-work-recurring [add <text> \| done <match> \| sweep]` | Anytime — when a task needs to happen periodically (refresh a snapshot, sweep a dir, re-validate a pin), when you finish such a task and want to reset its clock, or when the list has stale items | Default: shows overdue + due-soon + on-track + signal-driven, grouped by cadence. `add <text>` appends a new item (asks for cadence + pointer if not specified). `done <match>` updates the matched item's "Last run:" to today and appends to Done/History. `sweep` walks stale items and offers keep/adjust-cadence/drop for each. |
 | `/ds-work-bug [add <text> \| done <match> \| drop <match> <reason>]` | Anytime — a confirmed defect surfaces that you're not fixing this session. Also at session end via `/ds-work-halt` sweep | Default: lists open bugs. `add <text>` appends (title with optional " — body" after em-dash). `done <match>` moves the matched entry to Done. `drop <match> <reason>` moves it to Dropped with the reason. Done/Dropped tail capped at 10. |
+| `/ds-work-todo [add <text> \| done <match> \| drop <match> <reason>]` | Anytime — committed deferred work surfaces (typically when a milestone just closed and you scoped something out). `/ds-work-halt` prompts the sweep only when a milestone just closed, not every session | Identical shape to `/ds-work-bug`, but operates on `product/todos.md`. Entries carry an optional `· from M{N}` provenance suffix so future-you knows which milestone cut spawned the deferral. |
 | `/ds-work-nitpick [add <text> \| done <match> \| drop <match> <reason>]` | Anytime — a polish item surfaces (works but could be better). Also at session end via `/ds-work-halt` sweep | Identical shape to `/ds-work-bug`, but operates on `product/nitpicks.md`. |
 
 **Capture ladder.** Three surfaces, three commitment levels: `backlog.md` (mind-dump, no priority) → `parking-lot.md` (worth doing eventually, has tags) → `design/M{N}-PLAN.md` (scheduled). Items graduate upward via `/ds-work-backlog sweep` and `/ds-work-parking-lot promote`. They don't have to.
 
-**Bugs and nitpicks are separate from the ladder.** A bug is a confirmed defect ("Status update doesn't trigger the flow"), a nitpick is a polish statement ("flag icon is red here, blue there"), and a parking-lot item is a question or idea ("should we standardize the status colors?"). If you're fixing it this session, don't log it — just fix it. `/ds-work-halt` sweeps all three (parking-lot, bugs, nitpicks) at session end; `/ds-work-continue` surfaces open counts in the resume brief in order of urgency: bugs → nitpicks → parking-lot → recurring.
+**Bugs, todos, and nitpicks are separate from the ladder.** Five surfaces, five intents:
+
+| Surface | Intent | Example |
+|---|---|---|
+| `bugs.md` | defect — "it's broken" | *"Status update doesn't trigger the flow"* |
+| `todos.md` | commitment — "we will do this" | *"Benchmark larger cache TTLs — M2 only validated 5min"* |
+| `nitpicks.md` | polish — "works but could be better" | *"Flag icon is red here, blue there"* |
+| `parking-lot.md` | question — "should we…?" | *"Should we standardize the status colours?"* |
+| `backlog.md` | mind-dump — "don't want to forget this thought" | *"Explore RAG someday"* |
+
+If you're fixing it this session, don't log it — just fix it. `/ds-work-halt` sweeps parking-lot, bugs, and nitpicks every session; the todos sweep only runs when a milestone just closed. `/ds-work-continue` surfaces open counts in the resume brief in order of urgency: bugs → todos → nitpicks → parking-lot → recurring.
 
 **Recurring is a separate lane, not part of the capture ladder.** `recurring.md` holds tasks that decay and need periodic touching (refresh, sweep, re-validate) — they never move to Done because they never terminate. If an item will complete exactly once and then be finished, it belongs in `parking-lot.md`, not `recurring.md`. `/ds-work-status` and `/ds-work-continue` surface an "N overdue" line when relevant; `/ds-work-halt` asks after each session whether any recurring items got done. Cadence markers: 🕐 weekly · 🕐🕐 monthly · 🕐🕐🕐 quarterly · 📡 signal-driven.
 
@@ -131,6 +142,7 @@ product/
 ├── parking-lot.md               ← unscheduled work items (ideas, chores, "should we…" questions)
 ├── recurring.md                 ← recurring-maintenance list (tasks that decay and need periodic touching)
 ├── bugs.md                      ← actual defects discovered but not yet fixed
+├── todos.md                     ← committed deferred work from closed milestones
 ├── nitpicks.md                  ← polish items that work but could be better
 ├── project-management-principles.md   ← how this system works (per-project copy)
 ├── one-pager.md                 ← external-facing summary (generated by /ds-work-one-pager)
@@ -164,6 +176,7 @@ product/
 | What's parked for later (not yet scheduled)? | `parking-lot.md` |
 | What needs periodic re-touching (refresh, sweep, re-validate)? | `recurring.md` |
 | What's a confirmed defect I'm not fixing right now? | `bugs.md` |
+| What's a committed todo deferred from a closed milestone? | `todos.md` |
 | What polish item should I eventually clean up? | `nitpicks.md` |
 | What exactly does milestone N require? | `design/M{N}-PRD.md` |
 | What's the execution checklist for milestone N? | `design/M{N}-PLAN.md` |
